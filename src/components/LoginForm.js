@@ -27,7 +27,7 @@ export default function LoginForm() {
           </div>
 
           <button className="w-full bg-red-600 hover:bg-red-700 transition text-white py-2 rounded-lg font-semibold text-sm">
-            <Link href="/admin">Login</Link>
+            <Link href="/movie/admin">Login</Link>
           </button>
         </form>
 
