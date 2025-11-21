@@ -55,7 +55,7 @@ export default function HeroTrailer() {
             </a>
           </div>
 
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/20 z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/10 z-10"></div>
         </div>
 
         <div className="swiper-slide relative overflow-hidden">
@@ -90,7 +90,7 @@ export default function HeroTrailer() {
             </a>
           </div>
 
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/20 z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/10 z-10"></div>
         </div>
       </div>
       <div
