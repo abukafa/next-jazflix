@@ -20,7 +20,41 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #0a0a0a;
+  color: #e5e5e5;
+}
+.embla {
+  position: relative;
+}
+.embla__viewport {
+  -webkit-overflow-scrolling: touch;
+}
+.embla__container {
+  display: flex;
+}
+.embla__slide {
+  user-select: none;
+}
+/* opsional: hide native scrollbar on some browsers */
+.embla__viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.meta-strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0px;
+  padding: 6px 10px;
+  font-size: 13px;
+  backdrop-filter: blur(4px);
+  background-color: #0a0a0a81;
+}
+
+.embla__slide img {
+  transition: transform 0.3s ease;
+}
+
+.embla__slide:hover img {
+  transform: scale(1.2);
 }
