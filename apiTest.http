@@ -1,0 +1,63 @@
+### CREATE Movie
+POST http://localhost:3000/api/movies
+Content-Type: application/json
+
+  {
+    "tags": [],
+    "actors": [],
+    "director": [],
+    "isTrending": false,
+    "isPopular": false,
+    "title": "UNTITLE",
+    "originalTitle": "THE UNTITLE",
+    "description": "Bad Guys hewan pensiun dipaksa kembali beraksi dalam heist internasional bersama geng penjahat perempuan.",
+    "releaseYear": 2025,
+    "duration": "104m",
+    "ageRating": "PG",
+    "posterImage": "https://m.media-amazon.com/images/M/MV5BZjA3NjIzYTMt.jpg",
+    "bannerImage": "https://via.placeholder.com/1280x720?text=The+Bad+Guys+2",
+    "videoUrl": "https://drive.google.com/open?id=16-F9saDab8Oed64d1KlzGfY2CwxrmL8x",
+    "trailerUrl": "https://www.youtube.com/watch?v=_dXGdGE8kxs"
+  }
+
+### READ All Movies
+GET http://localhost:3000/api/movies
+
+### READ One Movie
+GET http://localhost:3000/api/movies/692160a679b5801b0a5aad2a
+
+### UPDATE Movie
+PUT http://localhost:3000/api/movies/692160a679b5801b0a5aad2a
+Content-Type: application/json
+
+{
+  "rating": 9.0
+}
+
+### DELETE Movie
+DELETE http://localhost:3000/api/movies/692160a679b5801b0a5aad2a
+
+
+
+===================================
+
+
+
+### Login
+POST http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+  "email": "abu@jaz.id",
+  "password": "rahasia"
+}
+
+### READ Current User
+GET http://localhost:3000/api/users/me
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MjAzZWY3NTkxOGMyNjYzZGE3NmNiYiIsIm5hbWUiOiJMdWJuYSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzYzODA0NTEyLCJleHAiOjE3NjQ0MDkzMTJ9.QFsQN830M3g3dWssQxsOm8mXRc4wc-dOY2EvUxn2E68
+
+### READ All Users
+GET http://localhost:3000/api/users
+
+### READ One User
+GET http://localhost:3000/api/users/69203ef75918c2663da76cbb
