@@ -1,14 +1,15 @@
-import { cookies } from "next/headers";
-import { verifyToken } from "@/lib/auth";
+import { connectDB } from "@/lib/db";
+import User from "@/models/User";
 
 export async function GET() {
-  const token = cookies().get("token")?.value;
+  await connectDB();
+  const users = await User.find().sort({ createdAt: -1 });
+  return Response.json(users);
+}
 
-  const user = verifyToken(token);
-
-  if (!user) {
-    return Response.json({ message: "Unauthorized" }, { status: 401 });
-  }
-
-  return Response.json({ user });
+export async function POST(req) {
+  await connectDB();
+  const data = await req.json();
+  const movie = await User.create(data);
+  return Response.json(movie, { status: 201 });
 }
