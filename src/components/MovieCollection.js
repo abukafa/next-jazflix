@@ -1,47 +1,52 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 
-export default function MovieCollection({
-  genres,
-  movies,
-  keyword,
-  detail = null,
-}) {
+export default function MovieCollection({ genres, movies, keyword }) {
   const [genre, setGenre] = useState("All");
 
   const filtered = movies
-    .filter((m) => genre === "All" || m.genre === genre)
+    .filter((m) => genre === "All" || m.genres.includes(genre))
     .filter((m) => m.title.toLowerCase().includes(keyword.toLowerCase()));
 
   return (
     <section className="w-full px-4 mt-10" id="movies">
       <div
         className={`flex items-center justify-between mb-6 ${
-          detail ? "hidden" : ""
+          Array.isArray(genres) && genres.length === 0 ? "hidden" : ""
         }`}
       >
         <h2 className="text-2xl font-bold">Collections</h2>
 
-        <div className="flex gap-2">
+        <select
+          value={genre}
+          onChange={(e) => setGenre(e.target.value)}
+          className="w-48 bg-black/70 text-white px-3 py-1 rounded-xl border border-gray-600 text-sm focus:outline-none cursor-pointer overflow-hidden"
+        >
           {genres.map((g) => (
-            <button
-              key={g}
-              onClick={() => setGenre(g)}
-              className="px-3 py-1 bg-white/10 rounded-full text-sm cursor-pointer"
-            >
+            <option key={g} value={g}>
               {g}
-            </button>
+            </option>
           ))}
-        </div>
+        </select>
       </div>
 
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-9 gap-4">
         {filtered.map((m, i) => (
           <div
             key={i}
-            className="rounded overflow-hidden hover:scale-105 cursor-pointer transition"
+            className="rounded overflow-hidden hover:scale-110 cursor-pointer transition"
           >
-            <img src={m.thumb} className="h-full object-cover rounded-xl" />
+            <Link href={`/movie/${m._id}`}>
+              <img
+                src={m.posterImage}
+                onError={(e) => {
+                  e.target.src = "/images/no-photo.png";
+                }}
+                className="w-full aspect-[4/6] object-cover rounded-xl"
+              />
+            </Link>
+
             <div className="text-white text-sm mt-2">{m.title}</div>
           </div>
         ))}

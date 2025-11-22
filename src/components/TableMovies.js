@@ -2,22 +2,28 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 
-export default function TableMovies({ movies }) {
+const remove = async (id) => {
+  if (!confirm("Yakin mau hapus data ini?")) return;
+  await fetch(`/api/movies/${id}`, { method: "DELETE" });
+  window.location.reload();
+};
+
+export default function TableMovies({ movies, genres }) {
   const [search, setSearch] = useState("");
   const [genre, setGenre] = useState("");
   const [page, setPage] = useState(1);
   const [trending, setTrending] = useState("");
   const [popular, setPopular] = useState("");
 
-  const perPage = 5;
+  const perPage = 10;
 
   const filtered = useMemo(() => {
     const s = search.toLowerCase();
-    const g = genre.toLowerCase();
+    const g = genre;
 
     return movies.filter((m) => {
       const matchSearch = m.title.toLowerCase().includes(s);
-      const matchGenre = g === "" || m.genre.toLowerCase() === g;
+      const matchGenre = g === "" || m.genres.includes(g);
 
       const matchTrending =
         trending === "" ||
@@ -62,10 +68,11 @@ export default function TableMovies({ movies }) {
           className="px-3 py-2 bg-black/40 border border-gray-700 rounded-lg text-sm"
         >
           <option value="">All Genres</option>
-          <option>Action</option>
-          <option>Drama</option>
-          <option>Comedy</option>
-          <option>Romance</option>
+          {genres.map((g, i) => (
+            <option key={i} value={g}>
+              {g}
+            </option>
+          ))}
         </select>
 
         <select
@@ -107,6 +114,7 @@ export default function TableMovies({ movies }) {
         <table className="w-full text-sm">
           <thead className="bg-white/5 text-left text-gray-300">
             <tr>
+              <th className="px-4 py-3">Poster</th>
               <th className="px-4 py-3">Title</th>
               <th className="px-4 py-3">Year</th>
               <th className="px-4 py-3">Genre</th>
@@ -119,23 +127,43 @@ export default function TableMovies({ movies }) {
           <tbody>
             {paginated.map((movie) => (
               <tr
-                key={movie.id}
+                key={movie._id}
                 className="border-t border-white/10 hover:bg-white/10"
               >
-                <td className="px-4 py-3">{movie.title}</td>
-                <td className="px-4 py-3">{movie.year}</td>
-                <td className="px-4 py-3">{movie.genre}</td>
-                <td className="px-4 py-3">{movie.rating}</td>
-                <td className="px-4 py-3">{movie.isTrending ? "Yes" : "No"}</td>
-                <td className="px-4 py-3">{movie.isPopular ? "Yes" : "No"}</td>
-                <td className="px-4 py-3 text-right flex justify-end gap-3">
+                <td className="px-4 py-3">
+                  <img
+                    src={movie.bannerImage}
+                    onError={(e) => {
+                      e.target.src = "/images/no-photo.png";
+                    }}
+                    className="w-20 aspect-[4/3] object-cover rounded-lg"
+                  />
+                </td>
+                <td className="px-4 py-3">{movie.originalTitle}</td>
+                <td className="px-4 py-3">{movie.releaseYear}</td>
+                <td className="px-4 py-3">{movie.genres.join(", ")}</td>
+                <td className="px-4 py-3 text-yellow-300">
+                  {`⭐ ${movie.rating || 5}/10`}
+                </td>
+                <td className="px-4 py-3 text-yellow-300">
+                  {movie.isTrending && <i className="fa fa-check"></i>}
+                </td>
+                <td className="px-4 py-3">
+                  {movie.isPopular && <i className="fa fa-check"></i>}
+                </td>
+                <td className="px-4 py-3 text-right">
                   <Link
-                    href="/movie/admin/:id"
-                    className="text-red-500 text-xs"
+                    href={`/movie/admin/${movie._id}`}
+                    className="text-yellow-500 text-lg mr-4"
                   >
-                    Edit
+                    <i className="fa fa-edit" />
                   </Link>
-                  <button className="text-red-500 text-xs">Delete</button>
+                  <button
+                    onClick={() => remove(movie._id)}
+                    className="text-red-500 text-lg cursor-pointer"
+                  >
+                    <i className="fa fa-trash" />
+                  </button>
                 </td>
               </tr>
             ))}

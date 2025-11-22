@@ -1,129 +1,24 @@
 import MoviePage from "@/components/MoviePage";
 
-const genres = ["All", "Action", "Crime", "Comedy", "Animation"];
-const movies = [
-  {
-    title: "Evil Dead Rise",
-    genre: "Action",
-    thumb: "https://image.tmdb.org/t/p/w300/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg",
-  },
-  {
-    title: "Venom",
-    genre: "Crime",
-    thumb: "https://image.tmdb.org/t/p/w300/rjkmN1dniUHVYAtwuV3Tji7FsDO.jpg",
-  },
-  {
-    title: "Evil Dead Rise",
-    genre: "Comedy",
-    thumb: "https://image.tmdb.org/t/p/w300/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg",
-  },
-  {
-    title: "Joker",
-    genre: "Animation",
-    thumb: "https://image.tmdb.org/t/p/w300/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",
-  },
-  {
-    title: "Mulan",
-    genre: "Action",
-    thumb: "https://image.tmdb.org/t/p/w300/aKx1ARwG55zZ0GpRvU2WrGrCG9o.jpg",
-  },
-  {
-    title: "Dilwale",
-    genre: "Crime",
-    thumb: "https://image.tmdb.org/t/p/w300/2CAL2433ZeIihfX1Hb2139CX0pW.jpg",
-  },
-  {
-    title: "Mulan",
-    genre: "Comedy",
-    thumb: "https://image.tmdb.org/t/p/w300/aKx1ARwG55zZ0GpRvU2WrGrCG9o.jpg",
-  },
-  {
-    title: "Madmax",
-    genre: "Animation",
-    thumb: "https://image.tmdb.org/t/p/w300/8tZYtuWezp8JbcsvHYO0O46tFbo.jpg",
-  },
-  {
-    title: "Joker",
-    genre: "Action",
-    thumb: "https://image.tmdb.org/t/p/w300/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",
-  },
-  {
-    title: "Avengers",
-    genre: "Crime",
-    thumb: "https://image.tmdb.org/t/p/w300/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg",
-  },
-  {
-    title: "Madmax",
-    genre: "Comedy",
-    thumb: "https://image.tmdb.org/t/p/w300/8tZYtuWezp8JbcsvHYO0O46tFbo.jpg",
-  },
-  {
-    title: "Venom",
-    genre: "Animation",
-    thumb: "https://image.tmdb.org/t/p/w300/rjkmN1dniUHVYAtwuV3Tji7FsDO.jpg",
-  },
-  {
-    title: "Evil Dead Rise",
-    genre: "Action",
-    thumb: "https://image.tmdb.org/t/p/w300/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg",
-  },
-  {
-    title: "Madmax",
-    genre: "Crime",
-    thumb: "https://image.tmdb.org/t/p/w300/8tZYtuWezp8JbcsvHYO0O46tFbo.jpg",
-  },
-  {
-    title: "Evil Dead Rise",
-    genre: "Comedy",
-    thumb: "https://image.tmdb.org/t/p/w300/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg",
-  },
-  {
-    title: "Interstellar",
-    genre: "Animation",
-    thumb: "https://image.tmdb.org/t/p/w300/2CAL2433ZeIihfX1Hb2139CX0pW.jpg",
-  },
-  {
-    title: "Dilwale",
-    genre: "Action",
-    thumb: "https://image.tmdb.org/t/p/w300/8UlWHLMpgZm9bx6QYh0NFoq67TZ.jpg",
-  },
-  {
-    title: "Wonder Women",
-    genre: "Crime",
-    thumb: "https://image.tmdb.org/t/p/w300/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg",
-  },
-  {
-    title: "Avengers 2",
-    genre: "Comedy",
-    thumb: "https://image.tmdb.org/t/p/w300/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg",
-  },
-  {
-    title: "Evil Dead Rise",
-    genre: "Animation",
-    thumb: "https://image.tmdb.org/t/p/w300/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg",
-  },
-  {
-    title: "Mulan",
-    genre: "Action",
-    thumb: "https://image.tmdb.org/t/p/w300/aKx1ARwG55zZ0GpRvU2WrGrCG9o.jpg",
-  },
-  {
-    title: "Evil Dead Rise",
-    genre: "Crime",
-    thumb: "https://image.tmdb.org/t/p/w300/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg",
-  },
-  {
-    title: "Madmax",
-    genre: "Comedy",
-    thumb: "https://image.tmdb.org/t/p/w300/8tZYtuWezp8JbcsvHYO0O46tFbo.jpg",
-  },
-  {
-    title: "Evil Dead Rise",
-    genre: "Animation",
-    thumb: "https://image.tmdb.org/t/p/w300/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg",
-  },
-];
+async function getMovies() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/movies`, {
+    cache: "no-store",
+  });
+  return res.json();
+}
 
-export default function Movie() {
-  return <MoviePage genres={genres} movies={movies} />;
+export default async function Movie({ params }) {
+  const { id } = await Promise.resolve(params);
+  const res = await getMovies();
+
+  const movies = Array.isArray(res) ? res : res.movies;
+
+  const movie = movies.find((m) => m._id === id);
+  if (!movie) return <div>Movie not found</div>;
+
+  const similars = movies.filter((m) =>
+    m.genres.some((g) => movie.genres.includes(g))
+  );
+
+  return <MoviePage genre={null} movies={similars} movie={movie} />;
 }

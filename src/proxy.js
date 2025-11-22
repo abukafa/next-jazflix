@@ -5,17 +5,17 @@ export async function proxy(req) {
   const url = new URL(req.url);
 
   // hanya proteksi /admin
-  if (url.pathname.startsWith("/admin")) {
+  if (url.pathname.startsWith("/movie/admin")) {
     const token = req.cookies.get("token")?.value;
 
     if (!token) {
-      return NextResponse.redirect(new URL("/", req.url));
+      return NextResponse.redirect(new URL("/movie/login", req.url));
     }
 
     try {
       jwt.verify(token, process.env.JWT_SECRET);
     } catch (err) {
-      return NextResponse.redirect(new URL("/", req.url));
+      return NextResponse.redirect(new URL("/movie/login", req.url));
     }
   }
 

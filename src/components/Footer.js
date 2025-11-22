@@ -8,7 +8,7 @@ export default function Footer() {
           <div className="md:col-span-3 space-y-6">
             <ul className="flex gap-4">
               <li>
-                <h6 className="text-white text-semibold">Terms of Use</h6>
+                <h6 className="text-red-500 text-semibold">Terms of Use</h6>
               </li>
             </ul>
 
@@ -16,8 +16,10 @@ export default function Footer() {
               This web streaming platform is made by students of Jaz Academy as
               media of learning Advance Programming Language witrh MERN
               Fullstack Development.
-              <span className="text-red"> For personal usage only, </span> Happy
-              watching!
+              <span className="text-red-500">
+                {" "}
+                For personal usage only, Happy watching!
+              </span>
             </p>
           </div>
 

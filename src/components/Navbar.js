@@ -36,7 +36,7 @@ export default function Navbar({ onSearch }) {
           <Link href="#movies" className="hover:text-red-500">
             Movies
           </Link>
-          <Link href="/movie/login" className="hover:text-red-500">
+          <Link href="/movie/admin" className="hover:text-red-500">
             Admin
           </Link>
         </div>
