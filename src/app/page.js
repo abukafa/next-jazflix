@@ -1,6 +1,5 @@
 import Image from "next/image";
 import HomePage from "@/components/HomePage";
-import Footer from "@/components/Footer";
 
 const genres = ["All", "Action", "Crime", "Comedy", "Animation"];
 const movies = [
@@ -127,10 +126,5 @@ const movies = [
 ];
 
 export default function Home() {
-  return (
-    <>
-      <HomePage genres={genres} movies={movies} />
-      <Footer />
-    </>
-  );
+  return <HomePage genres={genres} movies={movies} />;
 }

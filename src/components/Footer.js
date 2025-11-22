@@ -3,9 +3,9 @@
 export default function Footer() {
   return (
     <footer className="bg-black text-gray-300 py-10 mt-8">
-      <div className="max-w-7xl mx-auto px-6 pb-0 mb-0">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-0">
-          <div className="md:col-span-2 space-y-6">
+      <div className="w-full px-4 md:pl-8 xl:pl-20 pb-0 mb-0">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-0">
+          <div className="md:col-span-3 space-y-6">
             <ul className="flex gap-4">
               <li>
                 <h6 className="text-white text-semibold">Terms of Use</h6>
@@ -14,9 +14,10 @@ export default function Footer() {
 
             <p className="text-sm leading-relaxed">
               This web streaming platform is made by students of Jaz Academy as
-              media of learning Advance Programming Language and Fullstack
-              Development with MongoDB, ExpressJs, ReactJs, and NodeJs. For
-              personal usage only, Happy watching!
+              media of learning Advance Programming Language witrh MERN
+              Fullstack Development.
+              <span className="text-red"> For personal usage only, </span> Happy
+              watching!
             </p>
           </div>
 

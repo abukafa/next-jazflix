@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import Swiper from "swiper";
 import "swiper/css";
+import Link from "next/link";
 
 export default function HeroTrailer() {
   useEffect(() => {
@@ -47,12 +48,12 @@ export default function HeroTrailer() {
               <span className="text-gray-300">Action</span>
             </div>
             <br />
-            <a
-              href="detail.html"
+            <Link
+              href="/movie/:id"
               className="px-6 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 transition"
             >
               <i className="fa-solid fa-play"></i> Play
-            </a>
+            </Link>
           </div>
 
           <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/10 z-10"></div>
@@ -82,12 +83,12 @@ export default function HeroTrailer() {
               <span className="text-gray-300">Action</span>
             </div>
             <br />
-            <a
-              href="detail.html"
+            <Link
+              href="/movie/:id"
               className="px-6 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 transition"
             >
               <i className="fa-solid fa-play"></i> Play
-            </a>
+            </Link>
           </div>
 
           <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/10 z-10"></div>

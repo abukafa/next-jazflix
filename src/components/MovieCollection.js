@@ -1,7 +1,12 @@
 "use client";
 import { useState } from "react";
 
-export default function MovieCollection({ genres, movies, keyword }) {
+export default function MovieCollection({
+  genres,
+  movies,
+  keyword,
+  detail = null,
+}) {
   const [genre, setGenre] = useState("All");
 
   const filtered = movies
@@ -10,7 +15,11 @@ export default function MovieCollection({ genres, movies, keyword }) {
 
   return (
     <section className="w-full px-4 mt-10" id="movies">
-      <div className="flex items-center justify-between mb-6">
+      <div
+        className={`flex items-center justify-between mb-6 ${
+          detail ? "hidden" : ""
+        }`}
+      >
         <h2 className="text-2xl font-bold">Collections</h2>
 
         <div className="flex gap-2">
