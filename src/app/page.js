@@ -11,6 +11,15 @@ async function getMovies() {
 export default async function Home() {
   const movies = await getMovies();
   const genres = ["All", ...new Set(movies.flatMap((m) => m.genres))];
+  const trending = movies.filter((m) => m.isTrending);
+  const populars = movies.filter((m) => m.isPopular);
 
-  return <HomePage genres={genres} movies={movies} />;
+  return (
+    <HomePage
+      genres={genres}
+      movies={movies}
+      trending={trending}
+      populars={populars}
+    />
+  );
 }

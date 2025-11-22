@@ -8,7 +8,7 @@ const remove = async (id) => {
   window.location.reload();
 };
 
-export default function TableMovies({ movies, genres }) {
+export default function TableMovies({ movies = [], genres = [] }) {
   const [search, setSearch] = useState("");
   const [genre, setGenre] = useState("");
   const [page, setPage] = useState(1);
@@ -18,29 +18,62 @@ export default function TableMovies({ movies, genres }) {
   const perPage = 10;
 
   const filtered = useMemo(() => {
-    const s = search.toLowerCase();
-    const g = genre;
+    const sRaw = search.trim();
+    const s = sRaw.toLowerCase();
 
     return movies.filter((m) => {
-      const matchSearch = m.title.toLowerCase().includes(s);
-      const matchGenre = g === "" || m.genres.includes(g);
+      // normalize fields
+      const title = (m.title || "").toString().toLowerCase();
+      const original = (m.originalTitle || m.original_title || "")
+        .toString()
+        .toLowerCase();
+      const year = m.releaseYear || m.rerleaseYear || m.year || "";
+      const genresField = m.genres || m.tags || "";
+
+      // text matching: title OR original OR numeric year
+      const textMatch = s === "" || title.includes(s) || original.includes(s);
+
+      const yearMatch =
+        sRaw === "" ||
+        (!Number.isNaN(Number(sRaw)) && Number(sRaw) === Number(year));
+
+      // genre matching (support array or comma string)
+      const genreMatch =
+        genre === "" ||
+        (Array.isArray(genresField)
+          ? genresField.includes(genre)
+          : genresField
+              .toString()
+              .toLowerCase()
+              .split(",")
+              .map((g) => g.trim())
+              .includes(genre.toString().toLowerCase()));
 
       const matchTrending =
         trending === "" ||
-        (trending === "yes" && m.isTrending) ||
-        (trending === "no" && !m.isTrending);
+        (trending === "yes" && Boolean(m.isTrending)) ||
+        (trending === "no" && !Boolean(m.isTrending));
 
       const matchPopular =
         popular === "" ||
-        (popular === "yes" && m.isPopular) ||
-        (popular === "no" && !m.isPopular);
+        (popular === "yes" && Boolean(m.isPopular)) ||
+        (popular === "no" && !Boolean(m.isPopular));
 
-      return matchSearch && matchGenre && matchTrending && matchPopular;
+      // combine: text OR year must match, and all other filters must match
+      return (
+        (textMatch || yearMatch) && genreMatch && matchTrending && matchPopular
+      );
     });
   }, [search, genre, trending, popular, movies]);
 
-  const totalPages = Math.ceil(filtered.length / perPage);
-  const paginated = filtered.slice((page - 1) * perPage, page * perPage);
+  // pagination
+  const total = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(total / perPage));
+  const start = (Math.min(page, totalPages) - 1) * perPage;
+  const paginated = filtered.slice(start, start + perPage);
+
+  // helpers
+  const gotoPage = (p) => setPage(Math.max(1, Math.min(totalPages, p)));
 
   return (
     <div className="max-w-6xl mx-auto py-10 px-4 text-white">

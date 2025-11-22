@@ -7,15 +7,15 @@ import PopularCarousel from "@/components/PopularCarousel";
 import MovieCollection from "@/components/MovieCollection";
 import Footer from "@/components/Footer";
 
-export default function HomePage({ movies, genres }) {
+export default function HomePage({ movies, genres, trending, populars }) {
   const [keyword, setKeyword] = useState("");
 
   return (
     <>
       <Navbar onSearch={(word) => setKeyword(word)} />
-      <HeroTrailer />
-      <TrendingCarousel />
-      <PopularCarousel />
+      <HeroTrailer trending={trending} />
+      <TrendingCarousel trending={trending} />
+      <PopularCarousel populars={populars} />
       <MovieCollection movies={movies} genres={genres} keyword={keyword} />
       <Footer />
     </>

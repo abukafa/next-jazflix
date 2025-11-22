@@ -70,7 +70,7 @@ export default function EditMovieForm({ id }) {
           <label className="text-sm text-gray-300">Release Year</label>
           <input
             type="number"
-            value={movie.rerleaseYear}
+            value={movie.releaseYear}
             onChange={(e) =>
               setMovie({ ...movie, rerleaseYear: e.target.value })
             }
@@ -232,8 +232,10 @@ export default function EditMovieForm({ id }) {
           <input
             type="checkbox"
             className="w-4 h-4"
-            value={movie.isTrending}
-            onChange={(e) => setMovie({ ...movie, isTrending: e.target.value })}
+            checked={!!movie.isTrending}
+            onChange={(e) =>
+              setMovie({ ...movie, isTrending: e.target.checked })
+            }
           />
           <span> Trending Movie</span>
         </div>
@@ -242,8 +244,10 @@ export default function EditMovieForm({ id }) {
           <input
             type="checkbox"
             className="w-4 h-4"
-            value={movie.isPopular}
-            onChange={(e) => setMovie({ ...movie, isPopular: e.target.value })}
+            checked={!!movie.isPopular}
+            onChange={(e) =>
+              setMovie({ ...movie, isPopular: e.target.checked })
+            }
           />
           <span> Popular Movie</span>
         </div>
