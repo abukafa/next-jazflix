@@ -7,7 +7,13 @@ import PopularCarousel from "@/components/PopularCarousel";
 import MovieCollection from "@/components/MovieCollection";
 import Footer from "@/components/Footer";
 
-export default function HomePage({ movies, genres, trending, populars }) {
+export default function HomePage({
+  movies,
+  genres,
+  years,
+  trending,
+  populars,
+}) {
   const [keyword, setKeyword] = useState("");
 
   return (
@@ -16,7 +22,12 @@ export default function HomePage({ movies, genres, trending, populars }) {
       <HeroTrailer trending={trending} />
       <TrendingCarousel trending={trending} />
       <PopularCarousel populars={populars} />
-      <MovieCollection movies={movies} genres={genres} keyword={keyword} />
+      <MovieCollection
+        movies={movies}
+        genres={genres}
+        years={years}
+        keyword={keyword}
+      />
       <Footer />
     </>
   );

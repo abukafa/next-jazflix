@@ -11,12 +11,13 @@ async function getMovies() {
 export default async function Admin() {
   const movies = await getMovies();
   const genres = [...new Set(movies.flatMap((m) => m.genres))];
+  const years = [...new Set(movies.map((m) => m.releaseYear))].sort().reverse();
 
   return (
     <>
       <Navbar />
       <div className="my-20" />
-      <TableMovies movies={movies} genres={genres} />
+      <TableMovies movies={movies} genres={genres} years={years} />
     </>
   );
 }

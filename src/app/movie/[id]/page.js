@@ -20,5 +20,7 @@ export default async function Movie({ params }) {
     m.genres.some((g) => movie.genres.includes(g))
   );
 
-  return <MoviePage genre={null} movies={similars} movie={movie} />;
+  return (
+    <MoviePage movies={similars} genre={null} years={null} movie={movie} />
+  );
 }

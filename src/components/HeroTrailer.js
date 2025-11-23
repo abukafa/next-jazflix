@@ -1,32 +1,60 @@
 "use client";
-import { useEffect } from "react";
-import Swiper from "swiper";
-import "swiper/css";
 import Link from "next/link";
+import Swiper from "swiper";
+import { useEffect, useRef } from "react";
+import { Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
 
 const getYouTubeId = (url) => {
   const regExp = /(?:v=|\/embed\/|\.be\/)([a-zA-Z0-9_-]{11})/;
-  const match = url.match(regExp);
+  const match = url?.match(regExp);
   return match ? match[1] : null;
 };
 
-export default function HeroTrailer({ trending }) {
+export default function HeroTrailer({ trending = [] }) {
+  const swiperRef = useRef(null);
+
   useEffect(() => {
-    new Swiper(".myHero", {
+    // init swiper once
+    swiperRef.current = new Swiper(".myHero", {
+      modules: [Pagination, Autoplay],
       effect: "slide",
       loop: true,
       speed: 600,
-      autoplay: { delay: 6000, disableOnInteraction: false },
+      autoplay: { delay: 15000, disableOnInteraction: false },
       pagination: { el: ".swiper-pagination", clickable: true },
     });
-  }, []);
+
+    // listen custom event to jump
+    const handler = (e) => {
+      const { index, movieId } = e.detail || {};
+      if (typeof index === "number" && swiperRef.current) {
+        // use slideToLoop so looped slides map correctly
+        swiperRef.current.slideToLoop(index);
+        return;
+      }
+      if (movieId && Array.isArray(trending)) {
+        const idx = trending.findIndex((m) => m._id === movieId);
+        if (idx >= 0) swiperRef.current.slideToLoop(idx);
+      }
+    };
+
+    window.addEventListener("hero:jump", handler);
+
+    return () => {
+      window.removeEventListener("hero:jump", handler);
+      try {
+        swiperRef.current?.destroy?.();
+      } catch (err) {}
+    };
+  }, [trending]);
 
   return (
     <div className="swiper myHero relative w-full h-screen overflow-hidden">
       <div className="swiper-wrapper">
         {trending.map((movie) => {
           const id = getYouTubeId(movie.trailerUrl);
-
           return (
             <div
               className="swiper-slide relative overflow-hidden"
@@ -44,11 +72,26 @@ export default function HeroTrailer({ trending }) {
                 <h1 className="text-4xl md:text-5xl font-bold leading-tight">
                   {movie.title}
                 </h1>
+                <h3 className="text-lg md:text-xl font-bold leading-tight">
+                  {movie.originalTitle}
+                </h3>
+                <div className="flex items-center gap-3">
+                  {movie.genres?.map((genre, i) => (
+                    <span
+                      key={i}
+                      className="px-2 pb-1 text-xs rounded-md bg-gray-800"
+                    >
+                      {genre}
+                    </span>
+                  ))}
+                </div>
                 <p className="text-gray-300 text-sm md:text-base">
                   {movie.description}
                 </p>
                 <div className="flex items-center gap-3 text-sm text-yellow-400 font-semibold">
                   ⭐ {movie.rating || 5}/10
+                  <span className="text-gray-300">•</span>
+                  <span className="text-gray-300">{movie.releaseYear}</span>
                   <span className="text-gray-300">•</span>
                   <span className="text-gray-300">{movie.ageRating}</span>
                 </div>
@@ -67,7 +110,10 @@ export default function HeroTrailer({ trending }) {
         })}
       </div>
 
-      <div className="swiper-pagination !bottom-52 z-[999] relative"></div>
+      <div
+        className="swiper-pagination absolute !bottom-40 left-0 w-full z-[9999]"
+        id="popular"
+      ></div>
     </div>
   );
 }

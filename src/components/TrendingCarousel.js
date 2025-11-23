@@ -1,8 +1,8 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 
-export default function TrendingCarousel({ trending }) {
+export default function TrendingCarousel({ trending = [] }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     dragFree: true,
@@ -17,6 +17,15 @@ export default function TrendingCarousel({ trending }) {
     }, 4000);
     return () => clearInterval(interval);
   }, [emblaApi]);
+
+  const handleClick = (index, movieId) => {
+    // scroll embla to clicked card (optional)
+    emblaApi?.scrollTo(index);
+    // dispatch event for HeroTrailer
+    window.dispatchEvent(
+      new CustomEvent("hero:jump", { detail: { index, movieId } })
+    );
+  };
 
   return (
     <section
@@ -34,7 +43,8 @@ export default function TrendingCarousel({ trending }) {
               <div
                 className="relative embla__slide flex-shrink-0 ml-4"
                 style={{ width: 180 }}
-                key={i}
+                key={movie._id || i}
+                onClick={() => handleClick(i, movie._id)}
               >
                 <div className="rounded-xl overflow-hidden">
                   <img

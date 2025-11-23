@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 import useEmblaCarousel from "embla-carousel-react";
+import Link from "next/link";
 
 export default function PopularCarousel({ populars }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -36,10 +37,12 @@ export default function PopularCarousel({ populars }) {
                 style={{ width: 360 }}
               >
                 <div className="rounded-xl overflow-hidden">
-                  <img
-                    src={movie.bannerImage}
-                    className="w-full h-60 object-cover"
-                  />
+                  <Link href={`/movie/${movie._id}`}>
+                    <img
+                      src={movie.bannerImage}
+                      className="w-full h-60 object-cover"
+                    />
+                  </Link>
                 </div>
                 <div className="rounded-b-xl text-bold text-sm mt-2">
                   <span className="text-bold text-gray-300">
