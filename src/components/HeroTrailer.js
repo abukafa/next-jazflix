@@ -60,15 +60,23 @@ export default function HeroTrailer({ trending = [] }) {
               className="swiper-slide relative overflow-hidden"
               key={movie._id}
             >
-              <div className="absolute inset-0 overflow-hidden">
+              <div className="relative w-full h-screen overflow-hidden">
+                <img
+                  alt="banner"
+                  src={movie.bannerImage}
+                  className="absolute top-1/2 left-1/2 w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 md:hidden"
+                  onError={(e) => {
+                    e.target.src = "/images/no-photo.png";
+                  }}
+                />
                 <iframe
-                  className="absolute top-1/2 left-1/2 w-[140vw] h-[140vh] -translate-x-1/2 -translate-y-1/2"
+                  className="absolute top-1/2 left-1/2 w-[360%] xl:w-[140%] h-[360%] xl:h-[140%] -translate-x-1/2 -translate-y-1/2 hidden md:block"
                   src={`https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=${id}`}
                   allow="autoplay; encrypted-media"
                 ></iframe>
               </div>
 
-              <div className="absolute z-20 left-20 top-1/3 -translate-y-1/2 max-w-lg space-y-3">
+              <div className="absolute z-20 left-10 md:left-20 top-1/3 -translate-y-1/2 max-w-lg space-y-3">
                 <h1 className="text-4xl md:text-5xl font-bold leading-tight">
                   {movie.title}
                 </h1>
@@ -111,7 +119,7 @@ export default function HeroTrailer({ trending = [] }) {
       </div>
 
       <div
-        className="swiper-pagination absolute !bottom-40 left-0 w-full z-[9999]"
+        className="swiper-pagination absolute !bottom-36 left-0 w-full z-[9999]"
         id="popular"
       ></div>
     </div>

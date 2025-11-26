@@ -1,23 +1,21 @@
 "use client";
-import { useEffect, useRef } from "react";
 import useEmblaCarousel from "embla-carousel-react";
+import AutoScroll from "embla-carousel-auto-scroll";
 import Link from "next/link";
 
 export default function PopularCarousel({ populars }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: true,
-    dragFree: true,
-    align: "start",
-  });
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    const interval = setInterval(() => {
-      if (!emblaApi) return;
-      emblaApi.scrollNext();
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [emblaApi]);
+  const [emblaRef] = useEmblaCarousel(
+    { loop: true, dragFree: true, skipSnaps: true },
+    [
+      AutoScroll({
+        speed: 0.5,
+        direction: "backward",
+        pauseOnHover: true,
+        stopOnInteraction: false,
+        playOnInit: true,
+      }),
+    ]
+  );
 
   return (
     <section className="px-6 mt-4">
@@ -39,8 +37,14 @@ export default function PopularCarousel({ populars }) {
                 <div className="rounded-xl overflow-hidden">
                   <Link href={`/movie/${movie._id}`}>
                     <img
-                      src={movie.bannerImage}
                       className="w-full h-60 object-cover"
+                      alt="banner"
+                      src={`/api/proxy-image?url=${encodeURIComponent(
+                        movie.bannerImage
+                      )}`}
+                      onError={(e) => {
+                        e.target.src = "/images/no-photo.png";
+                      }}
                     />
                   </Link>
                 </div>

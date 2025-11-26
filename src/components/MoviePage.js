@@ -1,9 +1,15 @@
 "use client";
 import { useState } from "react";
-import Navbar from "@/components/Navbar";
-import MovieDetail from "@/components/MovieDetail";
-import MovieCollection from "@/components/MovieCollection";
-import Footer from "@/components/Footer";
+import dynamic from "next/dynamic";
+
+const Navbar = dynamic(() => import("@/components/Navbar"), { ssr: false });
+const MovieDetail = dynamic(() => import("@/components/MovieDetail"), {
+  ssr: false,
+});
+const MovieCollection = dynamic(() => import("@/components/MovieCollection"), {
+  ssr: false,
+});
+const Footer = dynamic(() => import("@/components/Footer"), { ssr: false });
 
 export default function MoviePage({ genres, movies, movie }) {
   const [keyword, setKeyword] = useState("");

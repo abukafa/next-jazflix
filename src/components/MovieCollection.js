@@ -30,7 +30,7 @@ export default function MovieCollection({ movies, genres, years, keyword }) {
           <select
             value={year}
             onChange={(e) => setYear(e.target.value)}
-            className="w-48 bg-black/70 text-white px-3 py-1 rounded-xl border border-gray-600 text-sm focus:outline-none cursor-pointer overflow-hidden mr-3"
+            className="w-24 md:w-48 bg-black/70 text-white px-3 py-1 rounded-xl border border-gray-600 text-sm focus:outline-none cursor-pointer overflow-hidden mr-3"
           >
             {years.map((y) => (
               <option key={y} value={y}>
@@ -42,7 +42,7 @@ export default function MovieCollection({ movies, genres, years, keyword }) {
           <select
             value={genre}
             onChange={(e) => setGenre(e.target.value)}
-            className="w-48 bg-black/70 text-white px-3 py-1 rounded-xl border border-gray-600 text-sm focus:outline-none cursor-pointer overflow-hidden"
+            className="w-24 md:w-48 bg-black/70 text-white px-3 py-1 rounded-xl border border-gray-600 text-sm focus:outline-none cursor-pointer overflow-hidden"
           >
             {genres.map((g) => (
               <option key={g} value={g}>
@@ -61,15 +61,16 @@ export default function MovieCollection({ movies, genres, years, keyword }) {
           >
             <Link href={`/movie/${m._id}`}>
               <img
-                src={m.posterImage}
+                src={`/api/proxy-image?url=${encodeURIComponent(
+                  m.posterImage
+                )}`}
+                alt="poster"
                 onError={(e) => {
                   e.target.src = "/images/no-photo.png";
                 }}
                 className="w-full aspect-[4/6] object-cover rounded-xl"
               />
             </Link>
-
-            <div className="text-white text-sm mt-2">{m.title}</div>
           </div>
         ))}
       </div>

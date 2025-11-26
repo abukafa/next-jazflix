@@ -1,22 +1,20 @@
 "use client";
-import { useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
+import AutoScroll from "embla-carousel-auto-scroll";
 
 export default function TrendingCarousel({ trending = [] }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: true,
-    dragFree: true,
-    align: "start",
-  });
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    const interval = setInterval(() => {
-      if (!emblaApi) return;
-      emblaApi.scrollNext();
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [emblaApi]);
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: true, dragFree: true, skipSnaps: true },
+    [
+      AutoScroll({
+        speed: 0.5,
+        direction: "forward",
+        pauseOnHover: true,
+        stopOnInteraction: false,
+        playOnInit: true,
+      }),
+    ]
+  );
 
   const handleClick = (index, movieId) => {
     // scroll embla to clicked card (optional)
@@ -48,8 +46,13 @@ export default function TrendingCarousel({ trending = [] }) {
               >
                 <div className="rounded-xl overflow-hidden">
                   <img
-                    src={movie.bannerImage}
                     className="w-full h-28 object-cover"
+                    src={`/api/proxy-image?url=${encodeURIComponent(
+                      movie.bannerImage
+                    )}`}
+                    onError={(e) => {
+                      e.target.src = "/images/no-photo.png";
+                    }}
                   />
                 </div>
                 <div className="meta-strip rounded-b-xl text-bold text-xs">

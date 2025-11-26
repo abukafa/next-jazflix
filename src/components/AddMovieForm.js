@@ -1,7 +1,15 @@
 "use client";
 import { useState } from "react";
-import SmartInputSingle from "./SmartInputSingle";
-import SmartInputMultiple from "./SmartInputMultiple";
+import dynamic from "next/dynamic";
+
+const SmartInputSingle = dynamic(
+  () => import("@/components/SmartInputSingle"),
+  { ssr: false }
+);
+const SmartInputMultiple = dynamic(
+  () => import("@/components/SmartInputMultiple"),
+  { ssr: false }
+);
 
 export default function AddMovieForm({ genres = [] }) {
   const [errors, setErrors] = useState({});
@@ -81,28 +89,6 @@ export default function AddMovieForm({ genres = [] }) {
     window.location.href = "/movie/admin";
   };
 
-  const autoFillFromTMDB = (data) => {
-    setMovie((prev) => ({
-      ...prev,
-      title: prev.title || data.title,
-      originalTitle: data.original_title,
-      description: data.overview,
-      releaseYear: data.release_date?.slice(0, 4),
-      duration: data.runtime ? `${data.runtime} min` : "",
-      rating: data.vote_average,
-      posterImage: data.poster_path
-        ? `https://image.tmdb.org/t/p/w500${data.poster_path}`
-        : "",
-      bannerImage: data.backdrop_path
-        ? `https://image.tmdb.org/t/p/original${data.backdrop_path}`
-        : "",
-      plot: data.overview,
-      director: data.director || "",
-      actors: data.actors || [],
-      genres: data.genres ? data.genres.map((g) => g.name) : [],
-    }));
-  };
-
   const setVal = (key, val) => setMovie({ ...movie, [key]: val });
 
   return (
@@ -128,7 +114,6 @@ export default function AddMovieForm({ genres = [] }) {
             type="tmdb-movie"
             value={movie.originalTitle}
             onChange={(v) => setVal("originalTitle", v)}
-            onSelectFull={autoFillFromTMDB}
             className={`w-full mt-1 px-3 py-2 bg-black/40 border ${
               errors.originalTitle
                 ? "border-red-500 animate-pulse"
@@ -137,7 +122,7 @@ export default function AddMovieForm({ genres = [] }) {
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <label className="text-sm text-gray-300">Description</label>
           <input
             type="text"
@@ -204,7 +189,7 @@ export default function AddMovieForm({ genres = [] }) {
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <label className="text-sm text-gray-300">Poster URL - Portrait</label>
           <input
             type="text"
@@ -218,7 +203,7 @@ export default function AddMovieForm({ genres = [] }) {
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <label className="text-sm text-gray-300">
             Banner URL - Landscape
           </label>
@@ -234,7 +219,7 @@ export default function AddMovieForm({ genres = [] }) {
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <label className="text-sm text-gray-300">YouTube Trailer URL</label>
           <input
             type="text"
@@ -248,7 +233,7 @@ export default function AddMovieForm({ genres = [] }) {
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <label className="text-sm text-gray-300">Video Movie URL</label>
           <input
             type="text"
@@ -299,7 +284,7 @@ export default function AddMovieForm({ genres = [] }) {
           </label>
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <SmartInputMultiple
             label="Genres"
             type="local"
@@ -312,7 +297,7 @@ export default function AddMovieForm({ genres = [] }) {
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <SmartInputSingle
             label="Director"
             type="tmdb-person"
@@ -321,7 +306,7 @@ export default function AddMovieForm({ genres = [] }) {
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <SmartInputMultiple
             label="Actors"
             type="tmdb-person"
@@ -330,7 +315,7 @@ export default function AddMovieForm({ genres = [] }) {
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <label className="text-sm text-gray-300">Tags</label>
           <SmartInputMultiple
             type="local"
@@ -341,7 +326,7 @@ export default function AddMovieForm({ genres = [] }) {
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <label className="text-sm text-gray-300">Plot</label>
           <textarea
             id="desc"
@@ -356,7 +341,7 @@ export default function AddMovieForm({ genres = [] }) {
           </p>
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <button
             type="submit"
             className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg font-semibold text-sm cursor-pointer"

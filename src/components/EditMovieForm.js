@@ -1,7 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
-import SmartInputSingle from "./SmartInputSingle";
-import SmartInputMultiple from "./SmartInputMultiple";
+import dynamic from "next/dynamic";
+
+const SmartInputSingle = dynamic(
+  () => import("@/components/SmartInputSingle"),
+  { ssr: false }
+);
+const SmartInputMultiple = dynamic(
+  () => import("@/components/SmartInputMultiple"),
+  { ssr: false }
+);
 
 export default function EditMovieForm({ id, genres = [] }) {
   const [errors, setErrors] = useState({});
@@ -70,7 +78,7 @@ export default function EditMovieForm({ id, genres = [] }) {
     window.location.href = "/movie/admin";
   };
 
-  if (!movie) return "Loading...";
+  if (!movie) return <div className="text-center mt-20">Loading...</div>;
   console.log(id);
 
   return (
@@ -100,7 +108,7 @@ export default function EditMovieForm({ id, genres = [] }) {
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <label className="text-sm text-gray-300">Description</label>
           <input
             type="text"
@@ -118,7 +126,7 @@ export default function EditMovieForm({ id, genres = [] }) {
             type="number"
             value={movie.releaseYear || ""}
             onChange={(e) =>
-              setMovie({ ...movie, rerleaseYear: e.target.value })
+              setMovie({ ...movie, releaseYear: e.target.value })
             }
             className="w-full mt-1 px-3 py-2 bg-black/40 border border-gray-600 rounded-lg text-sm focus:border-red-500 focus:outline-none"
           />
@@ -167,7 +175,7 @@ export default function EditMovieForm({ id, genres = [] }) {
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <label className="text-sm text-gray-300">Poster URL (Portrait)</label>
           <input
             type="text"
@@ -179,7 +187,7 @@ export default function EditMovieForm({ id, genres = [] }) {
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <label className="text-sm text-gray-300">
             Banner URL (Landscape)
           </label>
@@ -193,7 +201,7 @@ export default function EditMovieForm({ id, genres = [] }) {
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <label className="text-sm text-gray-300">YouTube Trailer URL</label>
           <input
             type="text"
@@ -203,7 +211,7 @@ export default function EditMovieForm({ id, genres = [] }) {
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <label className="text-sm text-gray-300">Video Movie URL</label>
           <input
             type="text"
@@ -234,7 +242,7 @@ export default function EditMovieForm({ id, genres = [] }) {
               type="checkbox"
               checked={movie.isTrending}
               onChange={(e) =>
-                setMovie({ ...movie, isTrending: e.target.value })
+                setMovie({ ...movie, isTrending: e.target.checked })
               }
               className="w-4 h-4"
             />
@@ -246,7 +254,7 @@ export default function EditMovieForm({ id, genres = [] }) {
               type="checkbox"
               checked={movie.isPopular}
               onChange={(e) =>
-                setMovie({ ...movie, isPopular: e.target.value })
+                setMovie({ ...movie, isPopular: e.target.checked })
               }
               className="w-4 h-4"
             />
@@ -254,7 +262,7 @@ export default function EditMovieForm({ id, genres = [] }) {
           </label>
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <SmartInputMultiple
             label="Genres"
             source={genres}
@@ -266,7 +274,7 @@ export default function EditMovieForm({ id, genres = [] }) {
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <SmartInputMultiple
             label="Director"
             type="tmdb-person"
@@ -275,7 +283,7 @@ export default function EditMovieForm({ id, genres = [] }) {
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <SmartInputMultiple
             label="Actors"
             type="tmdb-person"
@@ -284,7 +292,7 @@ export default function EditMovieForm({ id, genres = [] }) {
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <label className="text-sm text-gray-300">Tags</label>
           <SmartInputMultiple
             type="local"
@@ -295,7 +303,7 @@ export default function EditMovieForm({ id, genres = [] }) {
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <label className="text-sm text-gray-300">Plot (max 250 chars)</label>
           <textarea
             id="desc"
@@ -310,7 +318,7 @@ export default function EditMovieForm({ id, genres = [] }) {
           </p>
         </div>
 
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <button
             type="submit"
             className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg font-semibold text-sm cursor-pointer"

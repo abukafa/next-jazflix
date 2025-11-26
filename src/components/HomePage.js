@@ -1,11 +1,22 @@
 "use client";
 import { useState } from "react";
-import Navbar from "@/components/Navbar";
-import HeroTrailer from "@/components/HeroTrailer";
-import TrendingCarousel from "@/components/TrendingCarousel";
-import PopularCarousel from "@/components/PopularCarousel";
-import MovieCollection from "@/components/MovieCollection";
-import Footer from "@/components/Footer";
+import dynamic from "next/dynamic";
+
+const Navbar = dynamic(() => import("@/components/Navbar"), { ssr: false });
+const Footer = dynamic(() => import("@/components/Footer"), { ssr: false });
+const HeroTrailer = dynamic(() => import("@/components/HeroTrailer"), {
+  ssr: false,
+});
+const TrendingCarousel = dynamic(
+  () => import("@/components/TrendingCarousel"),
+  { ssr: false }
+);
+const PopularCarousel = dynamic(() => import("@/components/PopularCarousel"), {
+  ssr: false,
+});
+const MovieCollection = dynamic(() => import("@/components/MovieCollection"), {
+  ssr: false,
+});
 
 export default function HomePage({
   movies,

@@ -6,6 +6,7 @@ export default function SmartInputMultiple({
   type = "local",
   source = [],
   value = [],
+  className = "",
   onChange,
 }) {
   const [query, setQuery] = useState("");
@@ -96,7 +97,7 @@ export default function SmartInputMultiple({
 
       <div
         onClick={() => inputRef.current.focus()}
-        className="flex flex-wrap items-center gap-2 w-full mt-1 px-3 py-2 bg-black/40 border border-gray-600 rounded-lg text-sm"
+        className={`flex flex-wrap items-center gap-2 w-full mt-1 px-3 py-2 bg-black/40 border border-gray-600 rounded-lg text-sm ${className}`}
       >
         {value.map((item) => (
           <span

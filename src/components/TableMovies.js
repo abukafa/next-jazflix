@@ -122,7 +122,7 @@ export default function TableMovies({ movies = [], genres = [], years = [] }) {
             setYear(e.target.value);
             setPage(1);
           }}
-          className="px-3 py-2 bg-black/40 border border-gray-700 rounded-lg text-sm"
+          className="px-3 py-2 bg-black/40 border border-gray-700 rounded-lg text-sm hidden md:block"
         >
           <option value="">All Years</option>
           {years.map((y, i) => (
@@ -138,7 +138,7 @@ export default function TableMovies({ movies = [], genres = [], years = [] }) {
             setGenre(e.target.value);
             setPage(1);
           }}
-          className="px-3 py-2 bg-black/40 border border-gray-700 rounded-lg text-sm"
+          className="px-3 py-2 bg-black/40 border border-gray-700 rounded-lg text-sm hidden md:block"
         >
           <option value="">All Genres</option>
           {genres.map((g, i) => (
@@ -154,7 +154,7 @@ export default function TableMovies({ movies = [], genres = [], years = [] }) {
             setTrending(e.target.value);
             setPage(1);
           }}
-          className="px-3 py-2 bg-black/40 border border-gray-700 rounded-lg text-sm"
+          className="px-3 py-2 bg-black/40 border border-gray-700 rounded-lg text-sm hidden lg:block"
         >
           <option value="">Trending</option>
           <option value="yes">Yes</option>
@@ -167,7 +167,7 @@ export default function TableMovies({ movies = [], genres = [], years = [] }) {
             setPopular(e.target.value);
             setPage(1);
           }}
-          className="px-3 py-2 bg-black/40 border border-gray-700 rounded-lg text-sm"
+          className="px-3 py-2 bg-black/40 border border-gray-700 rounded-lg text-sm hidden lg:block"
         >
           <option value="">Popular</option>
           <option value="yes">Yes</option>
@@ -188,8 +188,11 @@ export default function TableMovies({ movies = [], genres = [], years = [] }) {
           <thead className="bg-white/5 text-left text-gray-300 cursor-pointer">
             <tr>
               <th className="px-4 py-3">Poster</th>
-              <th className="px-4 py-3" onClick={() => handleSort("title")}>
-                Title
+              <th
+                className="px-4 py-3"
+                onClick={() => handleSort("originalTitle")}
+              >
+                Original Title
               </th>
               <th
                 className="px-4 py-3"
@@ -197,19 +200,28 @@ export default function TableMovies({ movies = [], genres = [], years = [] }) {
               >
                 Year
               </th>
-              <th className="px-4 py-3" onClick={() => handleSort("genres")}>
+              <th
+                className="px-4 py-3 hidden md:table-cell"
+                onClick={() => handleSort("genres")}
+              >
                 Genres
               </th>
-              <th className="px-4 py-3" onClick={() => handleSort("rating")}>
+              <th
+                className="px-4 py-3 hidden lg:table-cell"
+                onClick={() => handleSort("rating")}
+              >
                 Rating
               </th>
               <th
-                className="px-4 py-3"
+                className="px-4 py-3 hidden lg:table-cell"
                 onClick={() => handleSort("isTrending")}
               >
                 Trending
               </th>
-              <th className="px-4 py-3" onClick={() => handleSort("isPopular")}>
+              <th
+                className="px-4 py-3 hidden lg:table-cell"
+                onClick={() => handleSort("isPopular")}
+              >
                 Popular
               </th>
               <th className="p-3 text-right">Actions</th>
@@ -223,7 +235,9 @@ export default function TableMovies({ movies = [], genres = [], years = [] }) {
               >
                 <td className="px-4 py-3">
                   <img
-                    src={movie.bannerImage}
+                    src={`/api/proxy-image?url=${encodeURIComponent(
+                      movie.bannerImage
+                    )}`}
                     onError={(e) => {
                       e.target.src = "/images/no-photo.png";
                     }}
@@ -232,16 +246,16 @@ export default function TableMovies({ movies = [], genres = [], years = [] }) {
                 </td>
                 <td className="px-4 py-3">{movie.originalTitle}</td>
                 <td className="px-4 py-3">{movie.releaseYear}</td>
-                <td>
+                <td className="px-4 py-3 hidden md:table-cell">
                   {Array.isArray(movie.genres) ? movie.genres.join(", ") : "-"}
                 </td>
-                <td className="px-4 py-3 text-yellow-300">
+                <td className="px-4 py-3 text-yellow-300 hidden lg:table-cell">
                   {`⭐ ${movie.rating || 5}/10`}
                 </td>
-                <td className="px-4 py-3 text-yellow-300">
+                <td className="px-4 py-3 text-yellow-300 hidden lg:table-cell">
                   {movie.isTrending && <i className="fa fa-check"></i>}
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3 text-yellow-300 hidden lg:table-cell">
                   {movie.isPopular && <i className="fa fa-check"></i>}
                 </td>
                 <td className="px-4 py-3 text-right">
@@ -253,7 +267,7 @@ export default function TableMovies({ movies = [], genres = [], years = [] }) {
                   </Link>
                   <button
                     onClick={() => remove(movie._id)}
-                    className="text-red-500 text-lg cursor-pointer"
+                    className="text-red-500 text-lg cursor-pointer hidden md:inline"
                   >
                     <i className="fa fa-trash" />
                   </button>

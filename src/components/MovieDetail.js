@@ -16,7 +16,7 @@ export default function MovieDetail({ movie }) {
         <div className="md:col-span-2 rounded-xl overflow-hidden shadow-xl">
           <iframe
             className="w-full h-[350px] md:h-[500px] object-cover"
-            src={`https://www.youtube.com/embed/${youTubeId}?autoplay=0&mute=0&controls=1`}
+            src={`https://www.youtube.com/embed/${youTubeId}?autoplay=1&mute=0&controls=1`}
             allowFullScreen
           ></iframe>
         </div>
