@@ -24,7 +24,9 @@ export default function Navbar({ onSearch }) {
       }`}
     >
       <div className="w-full flex items-center justify-between px-6 py-4">
-        <div className="text-xl font-bold text-red-500">Jazflix</div>
+        <div className="text-xl font-bold text-red-500">
+          <Link href="/">Jazflix</Link>
+        </div>
 
         <div className="hidden md:flex gap-6 text-sm">
           <Link href="/" className="hover:text-red-500">

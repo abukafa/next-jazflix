@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Swiper from "swiper";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -13,67 +13,111 @@ const getYouTubeId = (url) => {
 };
 
 export default function HeroTrailer({ trending = [] }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [videoReady, setVideoReady] = useState(false);
   const swiperRef = useRef(null);
 
   useEffect(() => {
-    // init swiper once
+    setVideoReady(false);
+
+    const timer = setTimeout(() => {
+      setVideoReady(true);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [activeIndex]);
+
+  useEffect(() => {
+    if (swiperRef.current) return; // cegah init ulang
+
     swiperRef.current = new Swiper(".myHero", {
       modules: [Pagination, Autoplay],
-      effect: "slide",
       loop: true,
       speed: 600,
-      autoplay: { delay: 15000, disableOnInteraction: false },
+      autoplay: { delay: 30000, disableOnInteraction: false },
       pagination: { el: ".swiper-pagination", clickable: true },
+      on: {
+        slideChange(swiper) {
+          setActiveIndex(swiper.realIndex);
+        },
+      },
     });
 
-    // listen custom event to jump
+    // event jump (external trigger)
     const handler = (e) => {
+      if (!swiperRef.current) return;
+
       const { index, movieId } = e.detail || {};
-      if (typeof index === "number" && swiperRef.current) {
-        // use slideToLoop so looped slides map correctly
+
+      if (typeof index === "number") {
         swiperRef.current.slideToLoop(index);
         return;
       }
+
       if (movieId && Array.isArray(trending)) {
         const idx = trending.findIndex((m) => m._id === movieId);
         if (idx >= 0) swiperRef.current.slideToLoop(idx);
       }
     };
 
+    // pause autoplay saat tab / TV idle
+    const onVisibility = () => {
+      if (document.hidden) {
+        swiperRef.current?.autoplay?.stop();
+      } else {
+        swiperRef.current?.autoplay?.start();
+      }
+    };
+
     window.addEventListener("hero:jump", handler);
+    document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
       window.removeEventListener("hero:jump", handler);
-      try {
-        swiperRef.current?.destroy?.();
-      } catch (err) {}
+      document.removeEventListener("visibilitychange", onVisibility);
+      swiperRef.current?.destroy?.();
+      swiperRef.current = null;
     };
-  }, [trending]);
+  }, []);
 
   return (
     <div className="swiper myHero relative w-full h-screen overflow-hidden">
       <div className="swiper-wrapper">
-        {trending.map((movie) => {
+        {trending.map((movie, index) => {
           const id = getYouTubeId(movie.trailerUrl);
+          const isActive = index === activeIndex;
           return (
             <div
               className="swiper-slide relative overflow-hidden"
               key={movie._id}
             >
-              <div className="relative w-full h-screen overflow-hidden">
+              <div
+                className="relative w-full h-screen overflow-hidden bg-black"
+                style={{
+                  aspectRatio: "16 / 9",
+                  minHeight: "100vh",
+                }}
+              >
+                {/* IMAGE selalu tampil dulu */}
                 <img
-                  alt="banner"
                   src={movie.bannerImage}
-                  className="absolute top-1/2 left-1/2 w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 md:hidden"
-                  onError={(e) => {
-                    e.target.src = "/images/no-photo.png";
-                  }}
+                  alt="banner"
+                  loading="lazy"
+                  className={`absolute top-1/2 left-1/2 w-full h-full object-cover
+                      -translate-x-1/2 -translate-y-1/2 transition-opacity duration-700
+                      ${isActive && videoReady ? "opacity-0" : "opacity-100"}`}
+                  onError={(e) => (e.target.src = "/images/no-photo.png")}
                 />
-                <iframe
-                  className="absolute top-1/2 left-1/2 w-[360%] xl:w-[140%] h-[360%] xl:h-[140%] -translate-x-1/2 -translate-y-1/2 hidden md:block"
-                  src={`https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=${id}`}
-                  allow="autoplay; encrypted-media"
-                ></iframe>
+
+                {/* VIDEO muncul setelah delay */}
+                {isActive && videoReady && id && (
+                  <iframe
+                    className="absolute top-1/2 left-1/2 w-[360%] xl:w-[140%]
+                      h-[360%] xl:h-[140%] -translate-x-1/2 -translate-y-1/2"
+                    src={`https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=${id}`}
+                    allow="autoplay; encrypted-media"
+                  />
+                )}
               </div>
 
               <div className="absolute z-20 left-10 md:left-20 top-1/3 -translate-y-1/2 max-w-lg space-y-3">
@@ -106,7 +150,7 @@ export default function HeroTrailer({ trending = [] }) {
                 <br />
                 <Link
                   href={`/movie/${movie._id}`}
-                  className="px-6 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 transition"
+                  className="px-6 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 transition z-[9999]"
                 >
                   <i className="fa-solid fa-play"></i> Play
                 </Link>
