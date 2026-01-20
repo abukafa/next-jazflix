@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Jazflix
 
-## Getting Started
+Jazflix is an **online educational streaming platform** designed to deliver learning content in a simple, scalable, and user-friendly way.
 
-First, run the development server:
+> ⚠️ For education purposes only.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Features
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- Video streaming for learning content
+- Organized courses & playlists
+- Responsive UI (desktop & mobile)
+- Optimized for performance
+- Secure access (auth-ready)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🛠 Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+- Frontend: React
+- Backend: Node.js
+- Database: MongoDB
+- Video: Embedded / Streaming-ready
+- Deployment: Cloud-ready (AWS compatible)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📌 Purpose
 
-## Deploy on Vercel
+Jazflix was built to:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Make educational content easier to access
+- Simulate a real-world streaming platform
+- Demonstrate full-stack architecture
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📷 Preview
+
+![Preview](public/images/preview.png)
+
+---
+
+## ⚠ Warning
+
+For education purposes only.
+
+---
