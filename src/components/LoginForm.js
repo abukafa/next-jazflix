@@ -87,7 +87,7 @@ export default function LoginForm() {
         </form>
 
         <p className="text-center text-gray-400 text-xs my-5">
-          {isLogin ? "Don't have an account? " : "Have an account? "}
+          {isLogin ? "Not registered? " : "Already registered? "}
           <button
             type="button"
             onClick={() => setIsLogin(!isLogin)}
