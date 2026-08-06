@@ -29,6 +29,8 @@ export default function MovieDetail({ movie }) {
             <div className="flex items-center gap-3 text-xs text-yellow-400 font-semibold">
               ⭐ {movie.rating || 5}/10
               <span className="text-gray-300">•</span>
+              <span className="text-gray-300">{movie.releaseYear}</span>
+              <span className="text-gray-300">•</span>
               <span className="text-gray-300">{movie.ageRating}</span>
             </div>
 
@@ -44,16 +46,8 @@ export default function MovieDetail({ movie }) {
                 {movie.genres.join(", ")}
               </p>
               <p>
-                <span className="text-white font-semibold">Category: </span>
-                {movie.category}
-              </p>
-              <p>
                 <span className="text-white font-semibold">Runtime: </span>
                 {movie.duration}
-              </p>
-              <p>
-                <span className="text-white font-semibold">Year: </span>
-                {movie.releaseYear}
               </p>
               <p>
                 <span className="text-white font-semibold">Director: </span>
@@ -65,9 +59,13 @@ export default function MovieDetail({ movie }) {
               </p>
               <p>
                 <span className="text-white font-semibold">Plot: </span>
-                {showFullPlot ? (movie.description || movie.plot) : ((movie.description || movie.plot)?.length > 100 ? `${(movie.description || movie.plot).substring(0, 100)}...` : (movie.description || movie.plot))}
-                {(movie.description || movie.plot)?.length > 100 && (
-                  <button 
+                {showFullPlot
+                  ? movie.description || movie.plot
+                  : (movie.description || movie.plot)?.length > 100
+                    ? `${(movie.description || movie.plot).substring(0, 100)}...`
+                    : movie.description || movie.plot}
+                {(movie.description || movie.plot)?.length > 75 && (
+                  <button
                     onClick={() => setShowFullPlot(!showFullPlot)}
                     className="text-red-500 hover:text-red-400 ml-2 font-semibold text-sm cursor-pointer"
                   >
