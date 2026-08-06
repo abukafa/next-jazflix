@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import InstallPWA from "./InstallPWA";
 
 export default function LoginForm() {
   const [isLogin, setIsLogin] = useState(true);
@@ -34,7 +35,8 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4">
+      <InstallPWA />
       <div className="w-full max-w-sm bg-white/5 p-6 rounded-2xl shadow-xl backdrop-blur-sm">
         <h1 className="text-2xl font-bold text-center mb-6 text-red-500">
           {isLogin ? "Jazflix Login" : "Jazflix Register"}
@@ -84,7 +86,7 @@ export default function LoginForm() {
           </button>
         </form>
 
-        <p className="text-center text-gray-400 text-xs mt-5">
+        <p className="text-center text-gray-400 text-xs my-5">
           {isLogin ? "Don't have an account? " : "Have an account? "}
           <button
             type="button"

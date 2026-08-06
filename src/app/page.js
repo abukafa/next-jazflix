@@ -1,4 +1,5 @@
 import Image from "next/image";
+export const revalidate = 60;
 import HomePage from "@/components/HomePage";
 import { connectDB } from "@/lib/db";
 import Movie from "@/models/Movie";

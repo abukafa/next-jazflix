@@ -102,7 +102,7 @@ export default function HeroTrailer({ trending = [] }) {
                 {/* IMAGE selalu tampil dulu */}
                 <Image
                   src={`/api/proxy-image?url=${encodeURIComponent(
-                    movie.bannerImage
+                    movie.bannerImage,
                   )}`}
                   alt="banner"
                   unoptimized={true}
@@ -124,14 +124,14 @@ export default function HeroTrailer({ trending = [] }) {
                 )}
               </div>
 
-              <div className="absolute z-20 left-10 md:left-20 top-1/3 -translate-y-1/2 max-w-lg space-y-3">
+              <div className="absolute z-20 left-10 md:left-20 top-1/3 -translate-y-1/2 max-w-lg space-y-3 pt-23  max-md:landscape:pt-2">
                 <h1 className="text-4xl md:text-5xl font-bold leading-tight">
                   {movie.title}
                 </h1>
-                <h3 className="text-lg md:text-xl font-bold leading-tight">
+                <h3 className="text-lg md:text-xl font-bold leading-tight max-md:landscape:hidden">
                   {movie.originalTitle}
                 </h3>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 max-md:landscape:hidden">
                   {movie.genres?.slice(0, 5).map((genre, i) => (
                     <span
                       key={i}
@@ -141,7 +141,7 @@ export default function HeroTrailer({ trending = [] }) {
                     </span>
                   ))}
                 </div>
-                <p className="text-gray-300 text-sm md:text-base">
+                <p className="text-gray-300 text-sm md:text-base max-md:landscape:hidden">
                   {movie.description?.length > 100
                     ? `${movie.description.substring(0, 100)}...`
                     : movie.description}

@@ -1,9 +1,12 @@
+import { connectDB } from "@/lib/db";
+import Movie from "@/models/Movie";
+
+export const revalidate = 60;
+
 async function getMovie(id) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/movies/${id}`,
-    { cache: "no-store" }
-  );
-  return res.json();
+  await connectDB();
+  const movie = await Movie.findById(id).lean();
+  return JSON.parse(JSON.stringify(movie));
 }
 
 function getDriveId(url) {
@@ -53,12 +56,11 @@ export default async function MovieWatch({ params }) {
   }
 
   return (
-    <div>
+    <div className="w-full h-screen bg-black overflow-hidden">
       <iframe
-        src={`https://drive.google.com/file/d/${fileId}/preview`}
-        width="100%"
-        height="1000"
-        allow="autoplay"
+        src={`https://drive.google.com/file/d/${fileId}/preview?autoplay=1`}
+        className="w-full h-full"
+        allow="autoplay; fullscreen"
         allowFullScreen
         style={{ border: 0 }}
       ></iframe>
