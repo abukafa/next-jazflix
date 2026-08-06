@@ -1,11 +1,12 @@
 import Image from "next/image";
 import HomePage from "@/components/HomePage";
+import { connectDB } from "@/lib/db";
+import Movie from "@/models/Movie";
 
 async function getMovies() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/movies`, {
-    cache: "no-store",
-  });
-  return res.json();
+  await connectDB();
+  const movies = await Movie.find().sort({ createdAt: -1 }).lean();
+  return JSON.parse(JSON.stringify(movies));
 }
 
 export default async function Home() {

@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import Swiper from "swiper";
 import { useEffect, useRef, useState } from "react";
 import { Pagination, Autoplay } from "swiper/modules";
@@ -99,12 +100,15 @@ export default function HeroTrailer({ trending = [] }) {
                 }}
               >
                 {/* IMAGE selalu tampil dulu */}
-                <img
-                  src={movie.bannerImage}
+                <Image
+                  src={`/api/proxy-image?url=${encodeURIComponent(
+                    movie.bannerImage
+                  )}`}
                   alt="banner"
-                  loading="lazy"
-                  className={`absolute top-1/2 left-1/2 w-full h-full object-cover
-                      -translate-x-1/2 -translate-y-1/2 transition-opacity duration-700
+                  unoptimized={true}
+                  fill
+                  priority={index === 0}
+                  className={`object-cover transition-opacity duration-700
                       ${isActive && videoReady ? "opacity-0" : "opacity-100"}`}
                   onError={(e) => (e.target.src = "/images/no-photo.png")}
                 />

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function MovieCollection({ movies, genres, years, keyword }) {
   movies = movies || [];
@@ -60,11 +61,14 @@ export default function MovieCollection({ movies, genres, years, keyword }) {
             className="rounded overflow-hidden hover:scale-110 cursor-pointer transition"
           >
             <Link href={`/movie/${m._id}`}>
-              <img
+              <Image
                 src={`/api/proxy-image?url=${encodeURIComponent(
                   m.posterImage
                 )}`}
-                alt="poster"
+                alt={m.title || "poster"}
+                unoptimized={true}
+                width={300}
+                height={450}
                 onError={(e) => {
                   e.target.src = "/images/no-photo.png";
                 }}
