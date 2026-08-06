@@ -4,11 +4,11 @@ import dynamic from "next/dynamic";
 
 const SmartInputSingle = dynamic(
   () => import("@/components/SmartInputSingle"),
-  { ssr: false }
+  { ssr: false },
 );
 const SmartInputMultiple = dynamic(
   () => import("@/components/SmartInputMultiple"),
-  { ssr: false }
+  { ssr: false },
 );
 
 export default function AddMovieForm({ genres = [] }) {
@@ -91,11 +91,73 @@ export default function AddMovieForm({ genres = [] }) {
 
   const setVal = (key, val) => setMovie({ ...movie, [key]: val });
 
+  const handleSelectMovie = async (title, tmdbData) => {
+    if (!tmdbData) {
+      setVal("originalTitle", title);
+      return;
+    }
+    
+    let fullDetails = null;
+    try {
+      const res = await fetch(`https://api.themoviedb.org/3/movie/${tmdbData.id}?append_to_response=credits,videos,release_dates`, {
+        headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjY2MzYmNkZmRiOGMyNzMzNWE1ZTJmYTIyZWY2Yzc3OSIsIm5iZiI6MTcxMTE3NzAzOS45MjksInN1YiI6IjY1ZmU3ZDRmMWIxZjNjMDE3Yzk4ZTFhOCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.1PlR_trKl9bLOsh2sp32-XOlXbBzjMB2zDL1MnXN5dk` }
+      });
+      fullDetails = await res.json();
+    } catch (e) {
+      console.error(e);
+    }
+
+    const rating = fullDetails?.vote_average ? fullDetails.vote_average.toFixed(1) : "";
+    const duration = fullDetails?.runtime ? `${fullDetails.runtime} min` : "";
+    const director = fullDetails?.credits?.crew?.find(c => c.job === "Director")?.name || "";
+    const actors = fullDetails?.credits?.cast?.slice(0, 5).map(a => a.name) || [];
+    const trailerUrl = fullDetails?.videos?.results?.find(v => v.type === "Trailer" && v.site === "YouTube")?.key 
+      ? `https://www.youtube.com/watch?v=${fullDetails.videos.results.find(v => v.type === "Trailer" && v.site === "YouTube").key}`
+      : "";
+    const usRelease = fullDetails?.release_dates?.results?.find(r => r.iso_3166_1 === "US");
+    const ageRating = usRelease?.release_dates?.[0]?.certification || "";
+    const genres = fullDetails?.genres?.map(g => g.name) || [];
+    
+    const shortTitle = (tmdbData.original_title || title).split(" ").slice(0, 2).join(" ");
+
+    setMovie((prev) => ({
+      ...prev,
+      originalTitle: tmdbData.original_title || title,
+      title: shortTitle || prev.title,
+      description: (tmdbData.overview || "").substring(0, 100) + ((tmdbData.overview?.length > 100) ? "..." : "") || prev.description,
+      plot: tmdbData.overview || prev.plot,
+      releaseYear: tmdbData.release_date ? tmdbData.release_date.split("-")[0] : prev.releaseYear,
+      posterImage: tmdbData.poster_path ? `https://image.tmdb.org/t/p/w500${tmdbData.poster_path}` : prev.posterImage,
+      bannerImage: tmdbData.backdrop_path ? `https://image.tmdb.org/t/p/original${tmdbData.backdrop_path}` : prev.bannerImage,
+      rating: rating || prev.rating,
+      duration: duration || prev.duration,
+      director: director || prev.director,
+      actors: actors.length > 0 ? actors : prev.actors,
+      trailerUrl: trailerUrl || prev.trailerUrl,
+      ageRating: ageRating || prev.ageRating,
+      genres: genres.length > 0 ? genres : prev.genres,
+    }));
+  };
+
   return (
     <div className="max-w-4xl mx-auto bg-white/5 p-8 rounded-2xl shadow-xl backdrop-blur-sm mb-20">
       <h1 className="text-2xl font-bold mb-6 text-red-500">Add New Movie</h1>
 
       <form onSubmit={save} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <SmartInputSingle
+            label="Original Title"
+            type="tmdb-movie"
+            value={movie.originalTitle}
+            onChange={(v, fullObj) => handleSelectMovie(v, fullObj)}
+            className={`w-full mt-1 px-3 py-2 bg-black/40 border ${
+              errors.originalTitle
+                ? "border-red-500 animate-pulse"
+                : "border-gray-600"
+            } rounded-lg text-sm`}
+          />
+        </div>
+
         <div>
           <label className="text-sm text-gray-300">Title</label>
           <input
@@ -104,20 +166,6 @@ export default function AddMovieForm({ genres = [] }) {
             onChange={(e) => setVal("title", e.target.value)}
             className={`w-full mt-1 px-3 py-2 bg-black/40 border ${
               errors.title ? "border-red-500 animate-pulse" : "border-gray-600"
-            } rounded-lg text-sm`}
-          />
-        </div>
-
-        <div>
-          <SmartInputSingle
-            label="Original Title"
-            type="tmdb-movie"
-            value={movie.originalTitle}
-            onChange={(v) => setVal("originalTitle", v)}
-            className={`w-full mt-1 px-3 py-2 bg-black/40 border ${
-              errors.originalTitle
-                ? "border-red-500 animate-pulse"
-                : "border-gray-600"
             } rounded-lg text-sm`}
           />
         </div>
@@ -298,20 +346,22 @@ export default function AddMovieForm({ genres = [] }) {
         </div>
 
         <div className="md:col-span-2">
-          <SmartInputSingle
-            label="Director"
-            type="tmdb-person"
-            value={movie.director}
-            onChange={(v) => setVal("director", v)}
+          <label className="text-sm text-gray-300">Director (pisahkan dengan koma)</label>
+          <input
+            type="text"
+            value={Array.isArray(movie.director) ? movie.director.join(", ") : movie.director || ""}
+            onChange={(e) => setVal("director", e.target.value.split(",").map(s => s.trim()))}
+            className="w-full mt-1 px-3 py-2 bg-black/40 border border-gray-600 rounded-lg text-sm focus:border-red-500 focus:outline-none"
           />
         </div>
 
         <div className="md:col-span-2">
-          <SmartInputMultiple
-            label="Actors"
-            type="tmdb-person"
-            value={movie.actors || []}
-            onChange={(val) => setVal("actors", val)}
+          <label className="text-sm text-gray-300">Actors (pisahkan dengan koma)</label>
+          <input
+            type="text"
+            value={Array.isArray(movie.actors) ? movie.actors.join(", ") : movie.actors || ""}
+            onChange={(e) => setVal("actors", e.target.value.split(",").map(s => s.trim()))}
+            className="w-full mt-1 px-3 py-2 bg-black/40 border border-gray-600 rounded-lg text-sm focus:border-red-500 focus:outline-none"
           />
         </div>
 
@@ -330,15 +380,11 @@ export default function AddMovieForm({ genres = [] }) {
           <label className="text-sm text-gray-300">Plot</label>
           <textarea
             id="desc"
-            maxLength="250"
-            rows="3"
+            rows="5"
             value={movie.plot}
             onChange={(e) => setVal("plot", e.target.value)}
             className="w-full mt-1 px-3 py-2 bg-black/40 border border-gray-600 rounded-lg text-sm"
           ></textarea>
-          <p id="descCounter" className="text-right text-xs text-gray-400 mt-1">
-            0/250
-          </p>
         </div>
 
         <div className="md:col-span-2">

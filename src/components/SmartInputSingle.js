@@ -13,6 +13,7 @@ export default function SmartInputSingle({
   const [suggestions, setSuggestions] = useState([]);
   const [highlight, setHighlight] = useState(-1);
   const inputRef = useRef(null);
+  const isSelected = useRef(false);
 
   const API_KEY =
     "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjY2MzYmNkZmRiOGMyNzMzNWE1ZTJmYTIyZWY2Yzc3OSIsIm5iZiI6MTcxMTE3NzAzOS45MjksInN1YiI6IjY1ZmU3ZDRmMWIxZjNjMDE3Yzk4ZTFhOCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.1PlR_trKl9bLOsh2sp32-XOlXbBzjMB2zDL1MnXN5dk";
@@ -21,6 +22,11 @@ export default function SmartInputSingle({
     if (!query.trim()) {
       setSuggestions([]);
       setHighlight(-1);
+      return;
+    }
+
+    if (isSelected.current) {
+      isSelected.current = false;
       return;
     }
 
@@ -56,9 +62,10 @@ export default function SmartInputSingle({
 
     const delay = setTimeout(load, 250);
     return () => clearTimeout(delay);
-  }, [query, type]);
+  }, [query, type, source]);
 
   const choose = (item) => {
+    isSelected.current = true;
     setQuery(item.label);
     onChange(item.label, item.full);
     setSuggestions([]);

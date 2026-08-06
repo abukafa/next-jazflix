@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import Link from "next/link";
 
 const getYouTubeId = (url) => {
@@ -8,6 +9,7 @@ const getYouTubeId = (url) => {
 };
 
 export default function MovieDetail({ movie }) {
+  const [showFullPlot, setShowFullPlot] = useState(false);
   let youTubeId = getYouTubeId(movie.trailerUrl);
 
   return (
@@ -63,8 +65,15 @@ export default function MovieDetail({ movie }) {
               </p>
               <p>
                 <span className="text-white font-semibold">Plot: </span>
-                {movie.description}.
-                <span className="hidden lg:inline"> {movie.plot}</span>
+                {showFullPlot ? (movie.description || movie.plot) : ((movie.description || movie.plot)?.length > 100 ? `${(movie.description || movie.plot).substring(0, 100)}...` : (movie.description || movie.plot))}
+                {(movie.description || movie.plot)?.length > 100 && (
+                  <button 
+                    onClick={() => setShowFullPlot(!showFullPlot)}
+                    className="text-red-500 hover:text-red-400 ml-2 font-semibold text-sm cursor-pointer"
+                  >
+                    {showFullPlot ? "Sembunyikan" : "Selengkapnya"}
+                  </button>
+                )}
               </p>
             </div>
           </div>

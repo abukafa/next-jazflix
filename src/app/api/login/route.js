@@ -14,6 +14,12 @@ export async function POST(req) {
   if (!isMatch)
     return Response.json({ error: "Invalid credentials" }, { status: 401 });
 
+  if (!user.isApproved)
+    return Response.json(
+      { error: "Akun Anda sedang menunggu persetujuan dari Admin Utama." },
+      { status: 403 }
+    );
+
   const token = jwt.sign(
     { id: user._id, name: user.name, role: user.role },
     process.env.JWT_SECRET,

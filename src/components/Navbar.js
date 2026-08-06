@@ -1,11 +1,20 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Navbar({ onSearch }) {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  const isAdmin = pathname?.startsWith("/movie/admin");
   const [scrolled, setScrolled] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [keyword, setKeyword] = useState("");
+
+  const handleLogout = () => {
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    window.location.href = "/movie/login";
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,19 +37,37 @@ export default function Navbar({ onSearch }) {
           <Link href="/">Jazflix</Link>
         </div>
 
-        <div className="hidden md:flex gap-6 text-sm">
+        <div className="hidden md:flex gap-6 text-sm items-center">
           <Link href="/" className="hover:text-red-500">
             Home
           </Link>
-          <Link href="#popular" className="hover:text-red-500">
+          <Link href="/#popular" className="hover:text-red-500">
             Populars
           </Link>
-          <Link href="#movies" className="hover:text-red-500">
+          <Link href="/#movies" className="hover:text-red-500">
             Movies
           </Link>
-          <Link href="/movie/admin" className="hover:text-red-500">
-            Admin
-          </Link>
+
+          {isAdmin ? (
+            <>
+              <Link href="/movie/admin" className="hover:text-red-500">
+                Dashboard
+              </Link>
+              <Link href="/movie/admin/users" className="hover:text-red-500">
+                Users
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="hover:text-red-500 cursor-pointer"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link href="/movie/admin" className="hover:text-red-500">
+              Admin
+            </Link>
+          )}
         </div>
 
         <div

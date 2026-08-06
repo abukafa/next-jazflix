@@ -132,7 +132,7 @@ export default function HeroTrailer({ trending = [] }) {
                   {movie.originalTitle}
                 </h3>
                 <div className="flex items-center gap-3">
-                  {movie.genres?.map((genre, i) => (
+                  {movie.genres?.slice(0, 5).map((genre, i) => (
                     <span
                       key={i}
                       className="px-2 pb-1 text-xs rounded-md bg-gray-800"
@@ -142,7 +142,9 @@ export default function HeroTrailer({ trending = [] }) {
                   ))}
                 </div>
                 <p className="text-gray-300 text-sm md:text-base">
-                  {movie.description}
+                  {movie.description?.length > 100
+                    ? `${movie.description.substring(0, 100)}...`
+                    : movie.description}
                 </p>
                 <div className="flex items-center gap-3 text-sm text-yellow-400 font-semibold">
                   ⭐ {movie.rating || 5}/10

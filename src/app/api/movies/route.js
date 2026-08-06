@@ -3,7 +3,7 @@ import Movie from "@/models/Movie";
 
 export async function GET() {
   await connectDB();
-  const movies = await Movie.find().sort({ createdAt: -1 });
+  const movies = await Movie.find().sort({ _id: -1 });
   return Response.json(movies);
 }
 

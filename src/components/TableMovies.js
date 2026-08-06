@@ -236,7 +236,7 @@ export default function TableMovies({ movies = [], genres = [], years = [] }) {
                 <td className="px-4 py-3">
                   <img
                     src={`/api/proxy-image?url=${encodeURIComponent(
-                      movie.bannerImage
+                      movie.bannerImage,
                     )}`}
                     onError={(e) => {
                       e.target.src = "/images/no-photo.png";
@@ -244,9 +244,11 @@ export default function TableMovies({ movies = [], genres = [], years = [] }) {
                     className="w-20 aspect-[4/3] object-cover rounded-lg"
                   />
                 </td>
-                <td className="px-4 py-3">{movie.originalTitle}</td>
+                <td className="px-4 py-3 max-w-[200px] truncate">
+                  {movie.originalTitle}
+                </td>
                 <td className="px-4 py-3">{movie.releaseYear}</td>
-                <td className="px-4 py-3 hidden md:table-cell">
+                <td className="px-4 py-3 max-w-[200px] truncate hidden md:table-cell">
                   {Array.isArray(movie.genres) ? movie.genres.join(", ") : "-"}
                 </td>
                 <td className="px-4 py-3 text-yellow-300 hidden lg:table-cell">

@@ -5,7 +5,7 @@ import Movie from "@/models/Movie";
 
 async function getMovies() {
   await connectDB();
-  const movies = await Movie.find().sort({ createdAt: -1 }).lean();
+  const movies = await Movie.find().sort({ _id: -1 }).lean();
   return JSON.parse(JSON.stringify(movies));
 }
 

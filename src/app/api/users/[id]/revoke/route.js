@@ -1,7 +1,7 @@
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 
-export async function DELETE(req, context) {
+export async function PATCH(req, context) {
   try {
     await connectDB();
     const { params } = context;
@@ -13,12 +13,15 @@ export async function DELETE(req, context) {
     }
 
     if (user.role === "superadmin") {
-      return Response.json({ message: "Superadmin tidak dapat dihapus!" }, { status: 403 });
+      return Response.json({ message: "Superadmin tidak dapat diubah statusnya!" }, { status: 403 });
     }
 
-    await User.findByIdAndDelete(id);
+    user.isApproved = false;
+    user.role = "guest";
+    
+    await user.save();
 
-    return Response.json({ message: "Pengguna dihapus" }, { status: 200 });
+    return Response.json({ message: "Akun dikembalikan ke status guest/pending" }, { status: 200 });
   } catch (error) {
     return Response.json({ message: "Terjadi kesalahan" }, { status: 500 });
   }
