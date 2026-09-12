@@ -1,10 +1,15 @@
-export async function GET(_, { params }) {
-  const { id } = params;
+import { getMovieDetails } from "@/lib/tmdb";
 
-  const res = await fetch(
-    `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.TMDB_KEY}&language=en-US`
-  );
-
-  const data = await res.json();
-  return Response.json(data);
+export async function GET(_, props) {
+  try {
+    const { id } = await props.params;
+    const movie = await getMovieDetails(id);
+    return Response.json(movie);
+  } catch (error) {
+    console.error("Error fetching TMDB movie:", error);
+    return Response.json(
+      { message: "Failed to fetch movie from TMDB" },
+      { status: 500 }
+    );
+  }
 }

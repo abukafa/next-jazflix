@@ -90,7 +90,7 @@ export default function HeroTrailer({ trending = [] }) {
           return (
             <div
               className="swiper-slide relative overflow-hidden"
-              key={movie._id}
+              key={movie.id || movie.movieId || movie._id}
             >
               <div
                 className="relative w-full h-screen overflow-hidden bg-black"
@@ -101,16 +101,12 @@ export default function HeroTrailer({ trending = [] }) {
               >
                 {/* IMAGE selalu tampil dulu */}
                 <Image
-                  src={`/api/proxy-image?url=${encodeURIComponent(
-                    movie.bannerImage,
-                  )}`}
-                  alt="banner"
-                  unoptimized={true}
+                  src={movie.bannerImage || movie.posterImage || "/images/hero-image.png"}
+                  alt={movie.title || "banner"}
                   fill
                   priority={index === 0}
                   className={`object-cover transition-opacity duration-700
                       ${isActive && videoReady ? "opacity-0" : "opacity-100"}`}
-                  onError={(e) => (e.target.src = "/images/no-photo.png")}
                 />
 
                 {/* VIDEO muncul setelah delay */}
@@ -147,7 +143,10 @@ export default function HeroTrailer({ trending = [] }) {
                     : movie.description}
                 </p>
                 <div className="flex items-center gap-3 text-sm text-yellow-400 font-semibold">
-                  ⭐ {movie.rating || 5}/10
+                  <span className="flex items-center gap-1">
+                    <i className="fa-solid fa-star text-xs" />
+                    <span>{movie.rating || 5}/10</span>
+                  </span>
                   <span className="text-gray-300">•</span>
                   <span className="text-gray-300">{movie.releaseYear}</span>
                   <span className="text-gray-300">•</span>
@@ -155,8 +154,12 @@ export default function HeroTrailer({ trending = [] }) {
                 </div>
                 <br />
                 <Link
-                  href={`/movie/${movie._id}`}
-                  className="px-6 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 transition z-[9999]"
+                  href={`/movie/${movie.id || movie.movieId || movie._id}`}
+                  className={`px-6 py-2 rounded-md font-semibold transition z-[9999] inline-flex items-center gap-2 ${
+                    movie.hasVideo
+                      ? "bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-900/50"
+                      : "border-2 border-red-600 text-red-500 hover:bg-red-600 hover:text-white bg-black/40 backdrop-blur-sm"
+                  }`}
                 >
                   <i className="fa-solid fa-play"></i> Play
                 </Link>

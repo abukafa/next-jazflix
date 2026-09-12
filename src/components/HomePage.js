@@ -13,6 +13,8 @@ export default function HomePage({
   years,
   trending,
   populars,
+  topRated = [],
+  upcoming = [],
 }) {
   const [keyword, setKeyword] = useState("");
 
@@ -21,7 +23,11 @@ export default function HomePage({
       <Navbar onSearch={(word) => setKeyword(word)} />
       <HeroTrailer trending={trending} />
       <TrendingCarousel trending={trending} />
-      <PopularCarousel populars={populars} />
+      <PopularCarousel
+        populars={populars}
+        topRated={topRated}
+        upcoming={upcoming}
+      />
       <MovieCollection
         movies={movies}
         genres={genres}

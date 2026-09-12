@@ -11,14 +11,14 @@ const MovieCollection = dynamic(() => import("@/components/MovieCollection"), {
 });
 const Footer = dynamic(() => import("@/components/Footer"), { ssr: false });
 
-export default function MoviePage({ genres, movies, movie }) {
+export default function MoviePage({ genres, movies, movie, hasVideo }) {
   const [keyword, setKeyword] = useState("");
 
   return (
     <>
       <Navbar onSearch={(word) => setKeyword(word)} />
       <div className="h-20" />
-      <MovieDetail movie={movie} />
+      <MovieDetail movie={movie} hasVideo={hasVideo} />
       <MovieCollection
         movies={movies || []}
         genres={genres || []}

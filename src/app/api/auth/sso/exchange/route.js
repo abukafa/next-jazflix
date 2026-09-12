@@ -69,7 +69,7 @@ export async function POST(request) {
     const token = signToken(user);
 
     const redirectPath =
-      user.role === "admin" || user.role === "superadmin" ? "/movie/admin" : "/";
+      user.role === "admin" || user.role === "superadmin" ? "/admin" : "/";
 
     const response = NextResponse.json({
       success: true,
