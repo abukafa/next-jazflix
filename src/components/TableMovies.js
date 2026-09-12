@@ -1,6 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const remove = async (id) => {
   if (!confirm("Yakin mau hapus data ini?")) return;
@@ -15,8 +16,7 @@ export default function TableMovies({ movies = [], genres = [], years = [] }) {
   const [search, setSearch] = useState("");
   const [genre, setGenre] = useState("");
   const [year, setYear] = useState("");
-  const [trending, setTrending] = useState("");
-  const [popular, setPopular] = useState("");
+  const [videoFilter, setVideoFilter] = useState("");
 
   const perPage = 10;
 
@@ -59,20 +59,13 @@ export default function TableMovies({ movies = [], genres = [], years = [] }) {
               .map((g) => g.trim())
               .includes(genre.toString().toLowerCase()));
 
-      const matchTrending =
-        trending === "" ||
-        (trending === "yes" && Boolean(m.isTrending)) ||
-        (trending === "no" && !Boolean(m.isTrending));
-
-      const matchPopular =
-        popular === "" ||
-        (popular === "yes" && Boolean(m.isPopular)) ||
-        (popular === "no" && !Boolean(m.isPopular));
+      const matchVideo =
+        videoFilter === "" ||
+        (videoFilter === "yes" && Boolean(m.videoUrl)) ||
+        (videoFilter === "no" && !Boolean(m.videoUrl));
 
       // combine: text OR year must match, and all other filters must match
-      return (
-        textMatch && yearMatch && genreMatch && matchTrending && matchPopular
-      );
+      return textMatch && yearMatch && genreMatch && matchVideo;
     });
 
     // tambahkan SORT
@@ -88,7 +81,7 @@ export default function TableMovies({ movies = [], genres = [], years = [] }) {
     }
 
     return list;
-  }, [search, year, genre, trending, popular, movies, sortBy, sortDir]);
+  }, [search, year, genre, videoFilter, movies, sortBy, sortDir]);
 
   // pagination
   const total = filtered.length;
@@ -149,33 +142,20 @@ export default function TableMovies({ movies = [], genres = [], years = [] }) {
         </select>
 
         <select
-          value={trending}
+          value={videoFilter}
           onChange={(e) => {
-            setTrending(e.target.value);
+            setVideoFilter(e.target.value);
             setPage(1);
           }}
           className="px-3 py-2 bg-black/40 border border-gray-700 rounded-lg text-sm hidden lg:block"
         >
-          <option value="">Trending</option>
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
-        </select>
-
-        <select
-          value={popular}
-          onChange={(e) => {
-            setPopular(e.target.value);
-            setPage(1);
-          }}
-          className="px-3 py-2 bg-black/40 border border-gray-700 rounded-lg text-sm hidden lg:block"
-        >
-          <option value="">Popular</option>
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
+          <option value="">All Video Status</option>
+          <option value="yes">Ada Video Link</option>
+          <option value="no">Kosong Video Link</option>
         </select>
 
         <Link
-          href="/movie/admin/add"
+          href="/admin/add"
           className="px-6 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700"
         >
           + Add Movie
@@ -192,7 +172,7 @@ export default function TableMovies({ movies = [], genres = [], years = [] }) {
                 className="px-4 py-3"
                 onClick={() => handleSort("originalTitle")}
               >
-                Original Title
+                Title & TMDB ID
               </th>
               <th
                 className="px-4 py-3"
@@ -212,18 +192,7 @@ export default function TableMovies({ movies = [], genres = [], years = [] }) {
               >
                 Rating
               </th>
-              <th
-                className="px-4 py-3 hidden lg:table-cell"
-                onClick={() => handleSort("isTrending")}
-              >
-                Trending
-              </th>
-              <th
-                className="px-4 py-3 hidden lg:table-cell"
-                onClick={() => handleSort("isPopular")}
-              >
-                Popular
-              </th>
+              <th className="px-4 py-3 hidden md:table-cell">Video</th>
               <th className="p-3 text-right">Actions</th>
             </tr>
           </thead>
@@ -234,44 +203,77 @@ export default function TableMovies({ movies = [], genres = [], years = [] }) {
                 className="border-t border-white/10 hover:bg-white/10"
               >
                 <td className="px-4 py-3">
-                  <img
-                    src={`/api/proxy-image?url=${encodeURIComponent(
-                      movie.bannerImage,
-                    )}`}
-                    onError={(e) => {
-                      e.target.src = "/images/no-photo.png";
-                    }}
-                    className="w-20 aspect-[4/3] object-cover rounded-lg"
-                  />
+                  <div className="w-16 h-20 relative rounded-lg overflow-hidden bg-zinc-900">
+                    <Image
+                      src={movie.posterImage || movie.bannerImage || "/images/no-photo.png"}
+                      alt={movie.title || "Poster"}
+                      width={64}
+                      height={80}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                 </td>
-                <td className="px-4 py-3 max-w-[200px] truncate">
-                  {movie.originalTitle}
+                <td className="px-4 py-3 max-w-[220px]">
+                  <div className="font-semibold text-white truncate">{movie.title}</div>
+                  <div className="text-xs text-zinc-400 truncate">{movie.originalTitle}</div>
+                  {movie.movieId ? (
+                    <a
+                      href={`https://www.themoviedb.org/movie/${movie.movieId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block mt-1 text-[11px] px-1.5 py-0.5 rounded bg-blue-900/60 text-blue-300 hover:bg-blue-800"
+                    >
+                      TMDB: #{movie.movieId}
+                    </a>
+                  ) : (
+                    <span className="inline-block mt-1 text-[11px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">
+                      No TMDB ID
+                    </span>
+                  )}
                 </td>
-                <td className="px-4 py-3">{movie.releaseYear}</td>
-                <td className="px-4 py-3 max-w-[200px] truncate hidden md:table-cell">
+                <td className="px-4 py-3">{movie.releaseYear || "-"}</td>
+                <td className="px-4 py-3 max-w-[180px] truncate hidden md:table-cell text-zinc-300">
                   {Array.isArray(movie.genres) ? movie.genres.join(", ") : "-"}
                 </td>
                 <td className="px-4 py-3 text-yellow-300 hidden lg:table-cell">
-                  {`⭐ ${movie.rating || 5}/10`}
+                  <span className="flex items-center gap-1">
+                    <i className="fa-solid fa-star text-xs" />
+                    <span>{movie.rating || "N/A"}</span>
+                  </span>
                 </td>
-                <td className="px-4 py-3 text-yellow-300 hidden lg:table-cell">
-                  {movie.isTrending && <i className="fa fa-check"></i>}
-                </td>
-                <td className="px-4 py-3 text-yellow-300 hidden lg:table-cell">
-                  {movie.isPopular && <i className="fa fa-check"></i>}
+                <td className="px-4 py-3 hidden md:table-cell">
+                  {movie.videoUrl ? (
+                    <span className="px-2 py-0.5 text-xs rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800 flex items-center gap-1 w-fit">
+                      <i className="fa-solid fa-check text-[10px]" /> Ada
+                    </span>
+                  ) : (
+                    <span className="px-2 py-0.5 text-xs rounded-full bg-red-950 text-red-300 border border-red-800 flex items-center gap-1 w-fit">
+                      <i className="fa-solid fa-xmark text-[10px]" /> Kosong
+                    </span>
+                  )}
                 </td>
                 <td className="px-4 py-3 text-right">
                   <Link
-                    href={`/movie/admin/${movie._id}`}
-                    className="text-yellow-500 text-lg mr-4"
+                    href={`/movie/${movie.movieId || movie._id}`}
+                    target="_blank"
+                    className="text-blue-400 text-lg mr-3 hover:text-blue-300"
+                    title="View movie"
                   >
-                    <i className="fa fa-edit" />
+                    <i className="fa-solid fa-eye" />
+                  </Link>
+                  <Link
+                    href={`/admin/${movie._id}`}
+                    className="text-yellow-500 text-lg mr-3 hover:text-yellow-400"
+                    title="Edit movie"
+                  >
+                    <i className="fa-solid fa-pen-to-square" />
                   </Link>
                   <button
                     onClick={() => remove(movie._id)}
-                    className="text-red-500 text-lg cursor-pointer hidden md:inline"
+                    className="text-red-500 text-lg cursor-pointer hover:text-red-400"
+                    title="Delete movie"
                   >
-                    <i className="fa fa-trash" />
+                    <i className="fa-solid fa-trash" />
                   </button>
                 </td>
               </tr>

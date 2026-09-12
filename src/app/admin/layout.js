@@ -7,7 +7,7 @@ export default async function AdminLayout({ children }) {
   const token = cookieStore.get("token")?.value;
 
   if (!token) {
-    redirect("/movie/login");
+    redirect("/login");
   }
 
   try {
@@ -19,7 +19,7 @@ export default async function AdminLayout({ children }) {
       redirect("/");
     }
   } catch (error) {
-    redirect("/movie/login");
+    redirect("/login");
   }
 
   return <>{children}</>;

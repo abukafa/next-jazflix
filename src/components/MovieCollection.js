@@ -25,7 +25,7 @@ export default function MovieCollection({ movies, genres, years, keyword }) {
           Array.isArray(genres) && genres.length === 0 ? "hidden" : ""
         }`}
       >
-        <h2 className="text-2xl font-bold">Collections</h2>
+        <h2 className="text-2xl font-bold">Our Collections</h2>
 
         <div>
           <select
@@ -55,28 +55,26 @@ export default function MovieCollection({ movies, genres, years, keyword }) {
       </div>
 
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-9 gap-4">
-        {filtered.map((m, i) => (
-          <div
-            key={i}
-            className="rounded overflow-hidden hover:scale-110 cursor-pointer transition"
-          >
-            <Link href={`/movie/${m._id}`}>
-              <Image
-                src={`/api/proxy-image?url=${encodeURIComponent(
-                  m.posterImage
-                )}`}
-                alt={m.title || "poster"}
-                unoptimized={true}
-                width={300}
-                height={450}
-                onError={(e) => {
-                  e.target.src = "/images/no-photo.png";
-                }}
-                className="w-full aspect-[4/6] object-cover rounded-xl"
-              />
-            </Link>
-          </div>
-        ))}
+        {filtered.map((m, i) => {
+          const mId = m.movieId || m.id || m._id;
+          const posterUrl = m.posterImage || "/images/no-photo.png";
+          return (
+            <div
+              key={m._id || i}
+              className="rounded overflow-hidden hover:scale-105 cursor-pointer transition relative bg-zinc-900 aspect-[4/6]"
+            >
+              <Link href={`/movie/${mId}`}>
+                <Image
+                  src={posterUrl}
+                  alt={m.title || "poster"}
+                  width={300}
+                  height={450}
+                  className="w-full h-full object-cover rounded-xl"
+                />
+              </Link>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

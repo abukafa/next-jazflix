@@ -1,5 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
+import Image from "next/image";
 
 export default function TableUsers({ users = [] }) {
   const [page, setPage] = useState(1);
@@ -114,9 +115,12 @@ export default function TableUsers({ users = [] }) {
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
                         {u.avatar ? (
-                          <img
+                          <Image
                             src={u.avatar}
-                            alt={u.name}
+                            alt={u.name || "User"}
+                            width={36}
+                            height={36}
+                            unoptimized={true}
                             className="w-9 h-9 rounded-full object-cover border border-zinc-700"
                           />
                         ) : (

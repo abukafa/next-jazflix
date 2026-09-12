@@ -5,21 +5,12 @@ export default function Footer() {
     <footer className="bg-black text-gray-300 py-10 mt-8">
       <div className="w-full px-4 md:pl-8 xl:pl-20 pb-0 mb-0">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-0">
-          <div className="md:col-span-3 space-y-6">
-            <ul className="flex gap-4">
-              <li>
-                <h6 className="text-red-500 text-semibold">Terms of Use</h6>
-              </li>
-            </ul>
-
-            <p className="text-sm leading-relaxed">
-              This web streaming platform is made by students of Jaz Academy as
-              media of learning Advance Programming Language witrh MERN
-              Fullstack Development.
-              <span className="text-red-500">
-                {" "}
-                For personal usage only, Happy watching!
-              </span>
+          <div className="md:col-span-3 space-y-4 mt-4">
+            <h6 className="text-red-500 text-semibold">Terms of Use</h6>
+            <p className="text-sm">
+              This web streaming platform was created for non-commercial
+              research and community learning in Software Development. Enjoy
+              exploring!
             </p>
           </div>
 

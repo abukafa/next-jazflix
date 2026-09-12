@@ -60,7 +60,9 @@ function LoginContent() {
 
       <div className="space-y-4">
         <p className="text-sm text-zinc-300 text-center leading-relaxed">
-          Gunakan akun resmi <strong className="text-white">jazacademy.id</strong> Anda untuk masuk atau mendaftar secara otomatis ke Jazflix.
+          Gunakan akun resmi{" "}
+          <strong className="text-white">jazacademy.id</strong> Anda untuk masuk
+          atau mendaftar secara otomatis ke Jazflix.
         </p>
 
         <button
@@ -92,39 +94,29 @@ function LoginContent() {
               />
             </svg>
           )}
-          <span>{loading ? "Menghubungkan..." : "Masuk dengan Akun Jaz Academy"}</span>
+          <span>
+            {loading ? "Menghubungkan..." : "Masuk dengan Akun Jaz Academy"}
+          </span>
         </button>
-
-        <div className="bg-white/5 border border-white/5 rounded-xl p-3.5 text-xs text-zinc-400 space-y-1">
-          <div className="flex items-center gap-1.5 text-zinc-300 font-medium">
-            <svg
-              className="w-4 h-4 text-green-400 shrink-0"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <span>Tanpa Registrasi Ulang</span>
-          </div>
-          <p className="text-[11px] leading-relaxed text-zinc-400 pl-5.5">
-            Siswa, guru, dan admin Jaz Academy dapat langsung masuk menggunakan satu identitas terpadu.
-          </p>
-        </div>
       </div>
 
-      <div className="mt-8 pt-6 border-t border-zinc-800/80 text-center">
+      <div className="mt-8 text-center">
         <Link
           href="/"
           className="text-xs text-zinc-400 hover:text-white transition inline-flex items-center gap-1.5"
         >
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          <svg
+            className="w-3.5 h-3.5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
           </svg>
           <span>Kembali menonton film di Beranda</span>
         </Link>
@@ -137,7 +129,11 @@ export default function LoginForm() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 bg-gradient-to-b from-black via-zinc-950 to-black">
       <InstallPWA />
-      <Suspense fallback={<div className="text-white text-sm">Memuat form login...</div>}>
+      <Suspense
+        fallback={
+          <div className="text-white text-sm">Memuat form login...</div>
+        }
+      >
         <LoginContent />
       </Suspense>
     </div>

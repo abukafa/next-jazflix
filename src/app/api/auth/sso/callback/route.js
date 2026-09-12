@@ -12,7 +12,7 @@ export async function GET(request) {
   if (error || !code) {
     console.error("SSO Callback error from IDP:", error, errorDescription);
     return NextResponse.redirect(
-      new URL(`/movie/login?error=${encodeURIComponent(errorDescription || error || "Akses ditolak")}`, baseUrl)
+      new URL(`/login?error=${encodeURIComponent(errorDescription || error || "Akses ditolak")}`, baseUrl)
     );
   }
 
@@ -43,7 +43,7 @@ export async function GET(request) {
       const errBody = await tokenResponse.text();
       console.error("Token exchange failed:", tokenResponse.status, errBody);
       return NextResponse.redirect(
-        new URL("/movie/login?error=Gagal+menukar+kode+otorisasi", baseUrl)
+        new URL("/login?error=Gagal+menukar+kode+otorisasi", baseUrl)
       );
     }
 
@@ -52,7 +52,7 @@ export async function GET(request) {
 
     if (!accessToken) {
       return NextResponse.redirect(
-        new URL("/movie/login?error=Access+token+tidak+ditemukan", baseUrl)
+        new URL("/login?error=Access+token+tidak+ditemukan", baseUrl)
       );
     }
 
@@ -67,7 +67,7 @@ export async function GET(request) {
     if (!userinfoResponse.ok) {
       console.error("Failed to fetch userinfo:", userinfoResponse.status);
       return NextResponse.redirect(
-        new URL("/movie/login?error=Gagal+mengambil+data+profil", baseUrl)
+        new URL("/login?error=Gagal+mengambil+data+profil", baseUrl)
       );
     }
 
@@ -81,11 +81,11 @@ export async function GET(request) {
 
     // 5. Determine destination URL
     const returnToCookie = request.cookies.get("jaz_oauth_return_to")?.value;
-    let targetPath = returnToCookie && returnToCookie !== "/movie/login" ? returnToCookie : null;
+    let targetPath = returnToCookie && returnToCookie !== "/login" ? returnToCookie : null;
 
     if (!targetPath) {
       if (user.role === "admin" || user.role === "superadmin") {
-        targetPath = "/movie/admin";
+        targetPath = "/admin";
       } else {
         targetPath = "/";
       }
@@ -109,7 +109,7 @@ export async function GET(request) {
   } catch (err) {
     console.error("Unexpected error in SSO callback:", err);
     return NextResponse.redirect(
-      new URL("/movie/login?error=Terjadi+kesalahan+sistem+saat+login", baseUrl)
+      new URL("/login?error=Terjadi+kesalahan+sistem+saat+login", baseUrl)
     );
   }
 }

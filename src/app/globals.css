@@ -62,3 +62,31 @@ body {
 .embla__slide:hover img {
   transform: scale(1.2);
 }
+
+/* Ukuran scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Area jalur scrollbar */
+::-webkit-scrollbar-track {
+  background: #121212;
+}
+
+/* Batang scrollbar */
+::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 4px;
+}
+
+/* Batang scrollbar saat di-hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555555;
+}
+
+/* Dukungan standar Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #333333 #121212;
+}
