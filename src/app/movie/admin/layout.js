@@ -14,10 +14,9 @@ export default async function AdminLayout({ children }) {
     // Verifikasi token sederhana tanpa cek database untuk mempercepat response
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-    // Jika perlu proteksi tambahan berdasarkan role, bisa ditambahkan di sini
-    // Misalnya, jika role guest tapi somehow berhasil login, tolak akses:
-    if (decoded.role === "guest") {
-      redirect("/"); // atau kembalikan ke halaman login
+    // Hanya perbolehkan role admin dan superadmin
+    if (decoded.role !== "admin" && decoded.role !== "superadmin") {
+      redirect("/");
     }
   } catch (error) {
     redirect("/movie/login");

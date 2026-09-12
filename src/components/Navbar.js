@@ -11,6 +11,8 @@ export default function Navbar({ onSearch }) {
   const [showSearch, setShowSearch] = useState(false);
   const [keyword, setKeyword] = useState("");
 
+  const [currentUser, setCurrentUser] = useState(null);
+
   const handleLogout = () => {
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     window.location.href = "/movie/login";
@@ -21,51 +23,109 @@ export default function Navbar({ onSearch }) {
       setScrolled(window.scrollY > 20);
     };
     window.addEventListener("scroll", handleScroll);
+
+    // Fetch current user
+    const checkUser = async () => {
+      try {
+        const res = await fetch("/api/users/me");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.user) {
+            setCurrentUser(data.user);
+          }
+        }
+      } catch (e) {
+        // Not logged in or error
+      }
+    };
+    checkUser();
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
+  const isUserAdmin =
+    currentUser?.role === "admin" || currentUser?.role === "superadmin";
+
   return (
     <div
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? "bg-black/70 backdrop-blur-md" : "bg-transparent"
+        scrolled ? "bg-black/80 backdrop-blur-md" : "bg-transparent"
       }`}
     >
       <div className="w-full flex items-center justify-between px-6 py-4">
-        <div className="text-xl font-bold text-red-500">
-          <Link href="/">Jazflix</Link>
+        <div className="text-xl font-bold text-red-500 tracking-wider">
+          <Link href="/">JAZFLIX</Link>
         </div>
 
         <div className="hidden md:flex gap-6 text-sm items-center">
-          <Link href="/" className="hover:text-red-500">
+          <Link href="/" className="hover:text-red-500 transition">
             Home
           </Link>
-          <Link href="/#popular" className="hover:text-red-500">
+          <Link href="/#popular" className="hover:text-red-500 transition">
             Populars
           </Link>
-          <Link href="/#movies" className="hover:text-red-500">
+          <Link href="/#movies" className="hover:text-red-500 transition">
             Movies
           </Link>
 
-          {isAdmin ? (
+          {isUserAdmin && (
             <>
-              <Link href="/movie/admin" className="hover:text-red-500">
+              <Link href="/movie/admin" className="hover:text-red-500 transition">
                 Dashboard
               </Link>
-              <Link href="/movie/admin/users" className="hover:text-red-500">
-                Users
+              <Link href="/movie/admin/users" className="hover:text-red-500 transition">
+                Manage Users
               </Link>
+            </>
+          )}
+
+          {currentUser ? (
+            <div className="flex items-center gap-3 pl-2 border-l border-zinc-700">
+              <div className="flex items-center gap-2">
+                {currentUser.avatar ? (
+                  <img
+                    src={currentUser.avatar}
+                    alt={currentUser.name || "User"}
+                    className="w-7 h-7 rounded-full object-cover border border-zinc-600"
+                  />
+                ) : (
+                  <div className="w-7 h-7 rounded-full bg-[#7367F0] flex items-center justify-center text-white text-xs font-bold">
+                    {(currentUser.name || "U").charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <span className="text-xs text-zinc-300 font-medium max-w-[120px] truncate">
+                  {currentUser.name}
+                </span>
+                {currentUser.role && (
+                  <span
+                    className={`text-[10px] px-1.5 py-0.5 rounded font-semibold ${
+                      currentUser.role === "superadmin"
+                        ? "bg-red-950 text-red-300 border border-red-800"
+                        : currentUser.role === "admin"
+                        ? "bg-purple-950 text-purple-300 border border-purple-800"
+                        : "bg-zinc-800 text-zinc-400"
+                    }`}
+                  >
+                    {currentUser.role}
+                  </span>
+                )}
+              </div>
               <button
                 onClick={handleLogout}
-                className="hover:text-red-500 cursor-pointer"
+                className="text-xs text-zinc-400 hover:text-red-400 cursor-pointer ml-1"
+                title="Keluar"
               >
                 Logout
               </button>
-            </>
+            </div>
           ) : (
-            <Link href="/movie/admin" className="hover:text-red-500">
-              Admin
+            <Link
+              href="/movie/login"
+              className="bg-red-600 hover:bg-red-700 transition text-white px-4 py-1.5 rounded-lg text-xs font-semibold shadow-md cursor-pointer ml-2"
+            >
+              Login
             </Link>
           )}
         </div>
