@@ -32,7 +32,7 @@ export default function InstallPWA() {
   if (!isInstallable) return null;
 
   return (
-    <div className="w-full max-w-sm bg-white/5 py-5 px-6 rounded-2xl shadow-xl backdrop-blur-md mb-4 flex items-center justify-between">
+    <div className="w-full max-w-md bg-zinc-950/80 border border-zinc-800/80 py-6 px-8 rounded-2xl shadow-xl backdrop-blur-md mb-4 flex items-center justify-between">
       <div className="flex flex-col">
         <span className="text-white font-bold text-sm">Install App</span>
         <span className="text-gray-300 text-xs">

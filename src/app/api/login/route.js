@@ -1,32 +1,14 @@
-import { connectDB } from "@/lib/db";
-import User from "@/models/User";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-
-export async function POST(req) {
-  await connectDB();
-  const { email, password } = await req.json();
-  const user = await User.findOne({ email });
-  if (!user)
-    return Response.json({ error: "Invalid credentials" }, { status: 401 });
-
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch)
-    return Response.json({ error: "Invalid credentials" }, { status: 401 });
-
-  if (!user.isApproved)
-    return Response.json(
-      { error: "Akun Anda sedang menunggu persetujuan dari Admin Utama." },
-      { status: 403 }
-    );
-
-  const token = jwt.sign(
-    { id: user._id, name: user.name, role: user.role },
-    process.env.JWT_SECRET,
-    { expiresIn: "7d" }
+export async function POST() {
+  return Response.json(
+    {
+      error: "Autentikasi sekarang menggunakan SSO Jaz Academy. Silakan login melalui tombol 'Login via Jaz Academy'.",
+      ssoUrl: "/api/auth/sso",
+    },
+    { status: 400 }
   );
-  return Response.json({
-    token,
-    user: { name: user.name, email: user.email, role: user.role },
-  });
 }
+
+export async function GET() {
+  return Response.redirect(new URL("/api/auth/sso", process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"));
+}
+
