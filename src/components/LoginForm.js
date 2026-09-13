@@ -94,9 +94,7 @@ function LoginContent() {
               />
             </svg>
           )}
-          <span>
-            {loading ? "Menghubungkan..." : "Masuk dengan Akun Jaz Academy"}
-          </span>
+          <span>{loading ? "Menghubungkan..." : "Login Jazacademy.id"}</span>
         </button>
       </div>
 
